@@ -1,0 +1,247 @@
+{
+  "personData": {
+    "data": {
+      "vorname": "Matteo",
+      "nachname": "Gamba",
+      "geburtsdatum": "21.01.2001",
+      "zivilstand": "Ledig",
+      "konfession": "reformiert",
+      "beruf": "Informatiker",
+      "adresse": "Wolfswinkel 18a",
+      "plz": 8046,
+      "stadt": "Zürich",
+      "email": "gambamatteo@hotmail.com"
+    }
+  },
+  "rueckzahlungBank": {
+    "data": {
+      "nachname": "Matteo",
+      "vorname": "Gamba",
+      "iban": "CH39 0070 0115 6518 4917 3"
+    }
+  },
+  "inZuerich": {
+    "data": {},
+    "start": true
+  },
+  "verheiratet": {
+    "data": {},
+    "start": false
+  },
+  "hatKinder": {
+    "data": {},
+    "start": false
+  },
+  "einkuenfteSozialversicherung": {
+    "data": {},
+    "start": false
+  },
+  "erwerbsausfallentschaedigung": {
+    "data": {},
+    "start": false
+  },
+  "lebensOderRentenversicherung": {
+    "data": {},
+    "start": false
+  },
+  "geschaeftsOderKorporationsanteile": {
+    "data": {},
+    "start": false
+  },
+  "verschuldet": {
+    "data": {},
+    "start": false
+  },
+  "geldVerdient": {
+    "data": [
+      {
+        "arbeitgeber": "For One Red",
+        "nettolohn": 5000,
+        "arbeitsort": "Zurich"
+      },
+      {
+        "arbeitgeber": "Matteo AG",
+        "nettolohn": 10000,
+        "arbeitsort": "Zurich"
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "oevArbeit": {
+    "data": {
+      "kosten": 500
+    },
+    "start": true
+  },
+  "veloArbeit": {
+    "data": {},
+    "start": true
+  },
+  "autoMotorradArbeit": {
+    "data": {
+      "fehlenVonOev": true,
+      "zeitersparnisUeber1h": true
+    },
+    "start": true
+  },
+  "autoMotorradArbeitWege": {
+    "data": [
+      {
+        "arbeitsort": "Zurich",
+        "anzahlArbeitstage": 50,
+        "anzahlKm": 10,
+        "fahrtenProTag": 2,
+        "rappenProKm": 70
+      },
+      {}
+    ],
+    "finished": true
+  },
+  "verpflegungAufArbeit": {
+    "data": {
+      "anzahlTage": 200
+    },
+    "start": true
+  },
+  "essenVerbilligungenVomArbeitgeber": {
+    "data": {},
+    "start": true
+  },
+  "schichtarbeit": {
+    "data": {
+      "wieVieleTageImJahr": 100
+    },
+    "start": true
+  },
+  "wochenaufenthalt": {
+    "data": [
+      {
+        "betrag": 2000,
+        "bezeichung": "Unterkunft Zurich",
+        "datum": "21.12.2024"
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "inAusbildung": {
+    "data": [
+      {
+        "betrag": 1000,
+        "bezeichung": "Informatikkurs"
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "beitragArbeitgeberAusbildung": {
+    "data": {
+      "betragArbeitGeber": 500
+    },
+    "start": true
+  },
+  "saeule2": {
+    "data": {},
+    "start": true
+  },
+  "ahvIVsaeule2Selber": {
+    "data": {}
+  },
+  "saeule3a": {
+    "data": {
+      "betrag": 7056
+    },
+    "start": true
+  },
+  "versicherungspraemie": {
+    "data": {
+      "betrag": 1000
+    },
+    "start": true
+  },
+  "privateUnfall": {
+    "data": {
+      "betrag": 1000
+    },
+    "start": true
+  },
+  "spenden": {
+    "data": [
+      {
+        "datum": "20.10.2024",
+        "bezeichnung": "Kirche",
+        "betrag": 500
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "bargeld": {
+    "data": {
+      "betrag": 10000
+    },
+    "start": true
+  },
+  "edelmetalle": {
+    "data": {
+      "betrag": 5000
+    },
+    "start": true
+  },
+  "bankkonto": {
+    "data": [
+      {
+        "bankGesellschaft": "Post Finance AG",
+        "kontoOderDepotNr": "CH24 0900 0000 9150 1730 1",
+        "staat": "Schweiz",
+        "bezeichnung": "Post Finance Privatkonto",
+        "waehrung": "CHF",
+        "steuerwertEndeJahr": 200000,
+        "zinsUeber200": true,
+        "zinsbetrag": 300
+      }
+    ],
+    "finished": true
+  },
+  "aktien": {
+    "data": [
+      {
+        "valorenNr": "11448018",
+        "ISIN": "US88160R1014",
+        "gesellschaftTitel": "Tesla Inc.",
+        "staat": "USA",
+        "steuerwertEndeJahr": 1500,
+        "stueckzahl": 10,
+        "waehrung": "USD",
+        "steuerwertProStueck": 150
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "krypto": {
+    "data": [
+      {
+        "steuerwertProStueck": 60000,
+        "stueckzahl": 10,
+        "steuerwert": 600000,
+        "waehrung": "BTC",
+        "bank": "Bitcoin Suisse AG"
+      }
+    ],
+    "start": true,
+    "finished": true
+  },
+  "motorfahrzeug": {
+    "data": {
+      "bezeichung": "Mercedes S-Klasse",
+      "kaufjahr": 2020,
+      "kaufpreis": 40000
+    },
+    "start": true
+  },
+  "liegenschaften": {
+    "data": {}
+  }
+}

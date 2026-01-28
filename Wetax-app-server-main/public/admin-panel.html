@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wetax Super Admin Panel</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <!-- Login Section -->
+    <div
+      id="loginSection"
+      class="container-fluid d-flex justify-content-center align-items-center vh-100"
+    >
+      <div class="card" style="width: 400px">
+        <div class="card-header text-center">
+          <h3><i class="bi bi-shield-lock"></i> Wetax Super Admin</h3>
+        </div>
+        <div class="card-body">
+          <form onsubmit="event.preventDefault(); adminLogin();">
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="admin@wetax.ch"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Enter password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-box-arrow-in-right"></i> Login
+            </button>
+          </form>
+          <!-- <div id="loginResult" class="alert mt-3" style="display: none"></div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Panel Section -->
+    <div id="adminSection" class="d-flex" style="display: none !important">
+      <!-- Sidebar -->
+      <div class="bg-dark text-white p-3 vh-100" style="width: 250px">
+        <h3 class="mb-4">Wetax Admin</h3>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2">
+            <a
+              href="#dashboard"
+              class="nav-link text-white"
+              onclick="showSection('dashboard'); loadDashboard();"
+              ><i class="bi bi-speedometer2"></i> Dashboard</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a href="#users" class="nav-link text-white" onclick="showSection('users'); loadUsers();"
+              ><i class="bi bi-people"></i> Users</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a
+              href="#taxreturns"
+              class="nav-link text-white"
+              onclick="showSection('taxreturns'); loadTaxReturns();"
+              ><i class="bi bi-file-earmark-text"></i> Tax Returns</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a
+              href="#system"
+              class="nav-link text-white"
+              onclick="showSection('system'); checkSystemHealth();"
+              ><i class="bi bi-shield-check"></i> System Health</a
+            >
+          </li>
+          <li class="nav-item mt-3">
+            <button class="btn btn-danger w-100" onclick="logout()">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="container-fluid p-4 flex-grow-1">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section" style="display: none">
+          <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+
+          <!-- Stats Cards -->
+          <div id="dashboardStats" class="row g-3 mb-4">
+            <!-- Dynamic stats will be loaded here -->
+          </div>
+
+          <!-- <div id="dashboardResult" class="alert" style="display: none"></div> -->
+        </div>
+
+        <!-- Users Section -->
+        <div id="users" class="content-section" style="display: none">
+          <h2 class="mb-4"><i class="bi bi-people"></i> User Management</h2>
+
+          <!-- User Controls -->
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>User Search & Controls</h5>
+              <button class="btn btn-sm btn-primary" onclick="toggleUserForm()">
+                <i class="bi bi-plus"></i> Add User
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <input
+                    type="text"
+                    id="userSearch"
+                    class="form-control"
+                    placeholder="Search by email, AHV, phone..."
+                  />
+                </div>
+                <div class="col-md-2">
+                  <input
+                    type="number"
+                    id="userPage"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                    placeholder="Page"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <input
+                    type="number"
+                    id="userLimit"
+                    class="form-control"
+                    value="10"
+                    min="1"
+                    max="100"
+                    placeholder="Limit"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-primary w-100" onclick="loadUsers()">
+                    <i class="bi bi-search"></i> Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Form (Hidden by default) -->
+          <div id="userForm" class="card mb-4 hidden" style="display: none">
+            <div class="card-header">
+              <h5 id="userFormTitle">Create New User</h5>
+            </div>
+            <div class="card-body">
+              <form onsubmit="event.preventDefault(); saveUser();">
+                <input type="hidden" id="editUserId" value="" />
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">AHV Number</label>
+                    <input type="text" id="userAhv" class="form-control" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" id="userPhone" class="form-control" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="userEmail" class="form-control" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <select id="userRole" class="form-select">
+                      <option value="user">User</option>
+                      <option value="super_admin">Super Admin</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Validated</label>
+                    <select id="userValidated" class="form-select">
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Active</label>
+                    <select id="userActive" class="form-select">
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save User
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="cancelUserForm()">
+                    <i class="bi bi-x"></i> Cancel
+                  </button>
+                </div>
+              </form>
+              <div id="userFormResult" class="alert mt-3" style="display: none"></div>
+            </div>
+          </div>
+
+          <!-- User List -->
+          <div class="card">
+            <div class="card-header">
+              <h5>Users</h5>
+            </div>
+            <div class="card-body">
+              <div id="usersResult" class="table-responsive">
+                <!-- Dynamic user list will be loaded here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Returns Section -->
+        <div id="taxreturns" class="content-section" style="display: none">
+          <h2 class="mb-4"><i class="bi bi-file-earmark-text"></i> Tax Return Management</h2>
+
+          <!-- Tax Return Controls -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5>Tax Return Controls</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                  <label class="form-label">Page</label>
+                  <input
+                    type="number"
+                    id="taxReturnPage"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                    placeholder="Page"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Limit</label>
+                  <input
+                    type="number"
+                    id="taxReturnLimit"
+                    class="form-control"
+                    value="10"
+                    min="1"
+                    max="100"
+                    placeholder="Limit"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Year</label>
+                  <input
+                    type="number"
+                    id="taxReturnYear"
+                    class="form-control"
+                    placeholder="Year (e.g., 2024)"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">User ID</label>
+                  <input
+                    type="text"
+                    id="taxReturnUserId"
+                    class="form-control"
+                    placeholder="User ID (optional)"
+                  />
+                </div>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label class="form-label">Date From</label>
+                  <input type="date" id="taxReturnDateFrom" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Date To</label>
+                  <input type="date" id="taxReturnDateTo" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary w-100" onclick="loadTaxReturns()">
+                    <i class="bi bi-search"></i> Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Document Upload Section -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5><i class="bi bi-upload"></i> Upload Tax Document</h5>
+            </div>
+            <div class="card-body">
+              <form id="pdfUploadForm" onsubmit="event.preventDefault(); uploadTaxPdf();">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">User ID</label>
+                    <input type="text" id="pdfUserId" class="form-control" required />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Year</label>
+                    <input type="number" id="pdfYear" class="form-control" required />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Tax Document (PDF or Image)</label>
+                    <input
+                      type="file"
+                      id="taxPdf"
+                      class="form-control"
+                      accept=".pdf,.png,.jpg,.jpeg"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button type="submit" class="btn btn-success">
+                    <i class="bi bi-upload"></i> Upload & Process
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="clearPdfForm()">
+                    <i class="bi bi-x"></i> Clear
+                  </button>
+                </div>
+              </form>
+              <div id="pdfUploadResult" class="alert mt-3" style="display: none"></div>
+            </div>
+          </div>
+
+          <!-- Manual Tax Return Creation -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5><i class="bi bi-plus"></i> Create Manual Tax Return</h5>
+            </div>
+            <div class="card-body">
+              <form onsubmit="event.preventDefault(); createManualTaxReturn();">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">User ID</label>
+                    <input type="text" id="manualUserId" class="form-control" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Year</label>
+                    <input type="number" id="manualYear" class="form-control" required />
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button type="submit" class="btn btn-info">
+                    <i class="bi bi-plus"></i> Create Tax Return
+                  </button>
+                </div>
+              </form>
+              <div id="manualTaxReturnResult" class="alert mt-3" style="display: none"></div>
+            </div>
+          </div>
+
+          <!-- Tax Return List -->
+          <div class="card">
+            <div class="card-header">
+              <h5>Tax Returns</h5>
+            </div>
+            <div class="card-body">
+              <div id="taxReturnsResult">
+                <!-- Dynamic tax return list will be loaded here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Health Section -->
+        <div id="system" class="content-section" style="display: none">
+          <h2 class="mb-4"><i class="bi bi-shield-check"></i> System Health & Monitoring</h2>
+
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>System Status</h5>
+              <button class="btn btn-sm btn-primary" onclick="checkSystemHealth()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+              </button>
+            </div>
+            <div class="card-body">
+              <div id="healthResult">
+                <!-- System health information will be loaded here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Edit User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">AHV</label><input type="text" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone</label><input type="text" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label><input type="email" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-select">
+                  <option>User</option>
+                  <option>Super Admin</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .content-section {
+        display: none;
+      }
+      .content-section.active {
+        display: block;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .result {
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+      }
+      .result.success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+      .result.error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
+      .user-item,
+      .tax-return-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #f9f9f9;
+      }
+      .item-actions {
+        margin-top: 10px;
+      }
+      .item-actions button {
+        margin-right: 5px;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      #dashboardStats .col-md-3 .card {
+        text-align: center;
+        padding: 20px;
+      }
+      #dashboardStats .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="admin-panel.js"></script>
+    <script>
+      // Section management functions
+      function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.content-section').forEach((section) => {
+          section.style.display = 'none'
+        })
+
+        // Show the selected section
+        const section = document.getElementById(sectionId)
+        if (section) {
+          section.style.display = 'block'
+        }
+
+        // Update active navigation
+        document.querySelectorAll('.nav-link').forEach((link) => {
+          link.classList.remove('active', 'bg-primary')
+        })
+
+        // Find and highlight the active nav link
+        const activeLink = document.querySelector(`[onclick*="showSection('${sectionId}')"]`)
+        if (activeLink) {
+          activeLink.classList.add('active', 'bg-primary')
+        }
+      }
+
+      // Initialize the page
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('Admin panel loaded')
+
+        // Load stored credentials and attempt auto-login
+        if (typeof loadStoredCredentials === 'function') {
+          loadStoredCredentials()
+        } else {
+          // Fallback if function is not available yet
+          setTimeout(() => {
+            if (typeof loadStoredCredentials === 'function') {
+              loadStoredCredentials()
+            }
+          }, 100)
+        }
+
+        // Show dashboard by default when logged in
+        showSection('dashboard')
+      })
+
+      // Set initial year values
+      document.addEventListener('DOMContentLoaded', function () {
+        const currentYear = new Date().getFullYear()
+        const pdfYearElement = document.getElementById('pdfYear')
+        const manualYearElement = document.getElementById('manualYear')
+
+        if (pdfYearElement) pdfYearElement.value = currentYear
+        if (manualYearElement) manualYearElement.value = currentYear
+      })
+    </script>
+  </body>
+</html>

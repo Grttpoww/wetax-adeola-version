@@ -1,0 +1,19 @@
+import Svg, { Path } from 'react-native-svg'
+
+export const TopSVGDesign = () => {
+  return (
+    <Svg width="233" height="338" viewBox="0 0 233 338" fill="none">
+      <Path
+        d="M273.437 -12.5711L274.013 -14.5H272H208.247H207.13L206.81 -13.4289L103.26 333.592L102.685 335.521H104.698H168.45H169.568L169.888 334.449L273.437 -12.5711Z"
+        stroke="#75D9DE"
+        strokeWidth="3"
+      />
+      <Path
+        d="M173.74 -12.5711L174.315 -14.5H172.302H108.55H107.432L107.112 -13.4289L3.56263 333.592L2.98705 335.521H5H68.7526H69.8703L70.19 334.449L173.74 -12.5711Z"
+        fill="#75D9DE"
+        stroke="#75D9DE"
+        strokeWidth="3"
+      />
+    </Svg>
+  )
+}

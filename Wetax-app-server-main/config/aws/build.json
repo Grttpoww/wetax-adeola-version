@@ -1,0 +1,32 @@
+{
+  "name": "wetax-server",
+  "source": {
+    "type": "GITHUB",
+    "location": "https://github.com/foronered/wetax-server.git",
+    "buildspec": "config/aws/buildspec.yml"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "image": "aws/codebuild/docker:18.09.0",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "environmentVariables": [
+      {
+        "name": "AWS_DEFAULT_REGION",
+        "value": "us-east-1"
+      },
+      {
+        "name": "AWS_ACCOUNT_ID",
+        "value": "778340214665"
+      },
+      {
+        "name": "IMAGE_REPO_NAME",
+        "value": "wetax-server"
+      }
+    ],
+    "privilegedMode": true
+  },
+  "artifacts": {
+    "type": "NO_ARTIFACTS"
+  },
+  "serviceRole": "arn:aws:iam::778340214665:role/service-role/codeBuildRole"
+}

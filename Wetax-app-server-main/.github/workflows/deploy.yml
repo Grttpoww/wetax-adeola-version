@@ -1,0 +1,36 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main  # change if your deploy branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy files to AWS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu                # or your EC2 username
+          key: ${{ secrets.AWS_SSH_KEY }}
+          source: "*"                     # all files in repo root
+          target: "/home/ubuntu/app"      # path on AWS server
+
+      - name: Build & restart Caddy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/app
+            npm install
+            npm run build
+            sudo systemctl restart myapp.service
+            sudo systemctl restart caddy

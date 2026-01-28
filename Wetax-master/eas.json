@@ -1,0 +1,51 @@
+{
+  "cli": {
+    "version": ">=16.26.0",
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_LOCAL_API_URL": "https://wetaxorg.ch",
+        "EXPO_PUBLIC_PROD_API_URL": "https://wetaxorg.ch"
+      },
+      "channel": "production"
+    },
+    "internal-apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal"
+    },
+    "development-adeola": {
+      "developmentClient": true,
+      "distribution": "store",
+      "env": {
+        "EXPO_PUBLIC_LOCAL_API_URL": "https://wetaxorg.ch",
+        "EXPO_PUBLIC_PROD_API_URL": "https://wetaxorg.ch"
+      },
+      "ios": {
+        "simulator": false,
+        "buildConfiguration": "Release"
+      },
+      "channel": "dev-adeola",
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {},
+    "development-adeola": {}
+  }
+}

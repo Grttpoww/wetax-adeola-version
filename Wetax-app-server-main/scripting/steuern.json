@@ -1,0 +1,45 @@
+{
+	"personData": {
+		"ahvNummmer": "743.433.4332.344",
+		"geburtsdatum": "20.10.2001",
+		"jahr": "2024",
+		"von": "20.10.2001",
+		"bis": "20.10.2020",
+		"vorname": "Andri",
+		"nachname": "Bernhardsgruetter",
+		"adresse": "Gossauerstrasse 30",
+		"plz": "8050",
+		"stadt": "zurich",
+		"land": "schweiz"
+	},
+	"lohn": {
+		"lohn": 230003,
+		"gehaltsNebenleistungen": {
+			"verpflegungUnterkunft": 30,
+			"privatanteilGeschaeftsfahrzeug": 30,
+			"andere": 30
+		},
+		"bruttolohn": 230003,
+		"beitraegeAHVIV": 300,
+		"beruflicheVorsorge": {
+			"ordentlicheBeitraege": 300
+		},
+		"nettolohn": 203000,
+		"spesenVerguetungen": {
+			"effektiveSpesen": {
+				"spesenReise": 300,
+				"spesenUebrige": 20
+			},
+			"pauschalSpesen": {
+				"spesenRepraesentation": 30,
+				"spesenAuto": 30,
+				"spesenUebrige": 30
+			},
+			"beitraegeWeiterbildung": 2000
+		}
+	},
+	"aussteller": {
+		"ort": "zurich",
+		"datum": "20.11.2013"
+	}
+}

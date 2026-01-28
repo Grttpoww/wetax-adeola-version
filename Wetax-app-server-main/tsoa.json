@@ -1,0 +1,16 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*.controller.ts"],
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "version": "v1",
+    "title": "WeTax Server",
+    "securityDefinitions": {}
+  },
+  "routes": {
+    "authenticationModule": "./src/authentication.ts",
+    "routesDir": "build"
+  }
+}
