@@ -1,0 +1,2867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:eCH-0008f="http://www.ech.ch/xmlns/eCH-0008-f/3"
+	xmlns:eCH-0010f="http://www.ech.ch/xmlns/eCH-0010-f/7"
+	xmlns:eCH-0044f="http://www.ech.ch/xmlns/eCH-0044-f/4"
+	xmlns:eCH-0046f="http://www.ech.ch/xmlns/eCH-0046-f/5"
+	xmlns:ssk="http://www.ech.ch/xmlns/eCH-0119/4"
+	xmlns:zh="http://www.zh.ch/xmlns/zh-taxdeclaration-it/ech3-0/9"
+	targetNamespace="http://www.zh.ch/xmlns/zh-taxdeclaration-it/ech3-0/9"
+	elementFormDefault="qualified" attributeFormDefault="unqualified" version="1">
+	<xs:annotation>
+		<xs:documentation xml:lang="de">ZH Steuererklärung natürliche Personen Erweiterungen</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0008-f/3" schemaLocation="./eCH-0008-3-0f.xsd"/>
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0010-f/7" schemaLocation="./eCH-0010-7-0f.xsd"/>
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0044-f/4" schemaLocation="./eCH-0044-4-1f.xsd"/>
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0046-f/5" schemaLocation="./eCH-0046-5-0f.xsd"/>
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0119/4" schemaLocation="./eCH-0119-4-0-0.xsd"/>
+	<!-- Header -->
+	<xs:element name="headerExtension" type="zh:headerExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den header</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="headerExtensionType">
+		<xs:sequence>
+			<xs:element name="hiddenData" type="zh:hiddenDataType" minOccurs="0"/>
+			<xs:element name="approvalReceipt" type="zh:approvalReceiptType" minOccurs="0"/>
+			<xs:element name="sourceSystem" type="zh:systemType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="documentList" type="zh:documentListType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="reducedDispatch" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="versionFK" type="xs:string" minOccurs="0"/>
+			<xs:element name="clientPasswordProtection" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="scanning" type="zh:scanningType" minOccurs="0"/>
+			<xs:element name="triageKind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="K">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Kantonales Steueramt</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="G">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Gemeinde</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="taxGroup" type="xs:string" minOccurs="0"/>
+			<xs:element name="limitedTaxLiability" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="businessPortal" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="hiddenDataType">
+		<xs:sequence>
+			<xs:element name="differenceInPropertyRevenueP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="differenceInPropertyRevenueP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="selfEmploymentP1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="noSelfEmploymentP1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="selfEmploymentP2" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="noSelfEmploymentP2" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="relevantCooperation" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="approvalReceiptType">
+		<xs:sequence>
+			<xs:element name="roundedTaxableIncome" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="roundedRatedeterminingIncome" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="roundedTaxableAsset" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="roundedRatedeterminingAsset" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="taxReturnKind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">ETC – "Anderer"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">UWA – "Wegzug in das Ausland"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">TF – "Todesfall"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">HPF – "Hinterbliebener Pflichtiger"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">HPA – "Hinterbliebener Partner"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">NVA - "Nachträgliche Veranlagung"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">EVA - "Ergänzende Veranlagung"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">TOL - "Tolerierte VST zur Quellensteuer"</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="systemType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Detaillierte Angaben über das Ursprungsystem des XML</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="system" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bezeichnung des Systems</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="version" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Version des Release des Erstellungssystem, mit der das XML erstellt wurde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="operatingSystem" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Betriebssystem, auf welchem das Erstellungssystem oder Browser installiert ist</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="browser" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Browser, mit welchem das Online-Erstellungssystem verwendet wurde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="date" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Datum, an dem das XML mit diesem System erstellt/verändert wurde</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="documentListType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Detaillierte Angaben über die Belege, die der Steuerpflichtige zusammen mit seiner Steuererklärung einreichen muss.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="documentType" type="zh:documentTypeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belegart, welcher vom Steuerpflichtigen eingereicht werden muss</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documentDeliveryMethod" type="zh:documentDeliveryMethodType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Art der Zustellung des Belegs.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documentDescription" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Textliche Beschreibung des Belegs, der vom Steuerpflichtigen eingereicht werden muss. Wird auf der Freigabequittung aufgedruckt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="documentTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweis(e) pro Arbeitgeber</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="02">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweise Nebenerwerb</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="03">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Geschäftsabschluss sowie Auszüge sämtlicher Privat- und Eigenkapitalkonten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="04">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellungen über Aktiven und Passiven, Einnahmen und Ausgaben, Privatentnahmen und Privateinlagen sowie der übrigen Geschäftsunkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="05">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Selbständigerwerbende mit kaufmännischer Buchführung: Geschäftsabschluss sowie Auszüge sämtlicher Privat- und Eigenkapitalkonten; mit vereinfachter Buchführung: Aufstellungen über Aktiven und Passi-ven, Einnahmen und Ausgaben, Privatentnahmen und Privateinlagen sowie der übrigen Geschäftsunkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="06">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) AHV-/IV-Renten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="07">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) Renten/Pensionen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="08">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) über Bezug von Taggeldern der Arbeitslosenkasse</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="09">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Kinder-/Familienzulage, Mutterschaftsentschädigung, Taggelder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Nur die folgenden Beilagen zum Wertschriftenverzeichnis: Steuerauszüge (falls darauf verwiesen wird), Ertragsabrechnungen auf Festgeldanlagen, Ausschüttungsbelege für nichtkotierte Titel, Originale Lotteriebescheinigungen, Kauf-/Verkaufsbelege von veräusserten IUP-Titeln</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung Unterhaltsbeiträge (Ehegattenalimente)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="12">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Abrechnung unverteilte Erbschaft(en), Geschäfts-/Korporationsanteile</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="13">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) über weitere Einkünfte</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="14">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Aufstellung über Kapitalabfindung(en) für wiederkehrende Leistungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="15">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung über effektive Unterhaltskosten Liegenschaft</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="16">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege über die effektiven Berufskosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="17">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege über die effektiven Kosten bei unselbständiger Nebenerwerbstätigkeit</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="18">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege zu bezahlten Schuldzinsen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="19">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Beiträge Selbstvorsorge Säule 3a</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="20">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung/en Beiträge berufliche Vorsorge</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="21">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Beiträge staatliche Vorsorge</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="22">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung/Belege über Beiträge an politische Parteien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="23">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege zu geltend gemachten berufsorientierten Aus- und Weiterbildungskosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="24">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege zu Aufstellung behinderungsbedingte Kosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="25">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege zu Aufstellung Krankheits-/Unfallkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="26">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Zahlungsnachweise Unterstützungsleistungen für jede unterstützte Person</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="27">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Zahlungsnachweise Kosten für fremdbetreute Kinder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="28">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege über geleistete Unterhaltsbeiträge an den geschiedenen oder getrennt lebenden Ehegatten/Partner (mit der Steuererklärung 2019 sind alle Belege einzureichen)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="29">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Belege über geleistete Unterhaltsbeiträge für minderjährige Kinder oder volljährige Kinder in Erstausbildung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="100">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweis(e) pro Arbeitgeber (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="101">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweis(e) pro Arbeitgeber (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="102">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweis(e) pro Nebenerwerb (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="103">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Lohnausweis(e) pro Nebenerwerb (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="120">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Einkünften aus selbständiger Erwerbstätigkeit (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="121">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Einkünften aus selbständiger Erwerbstätigkeit (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="122">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Einkünften aus selbständiger Nebenerwerbstätigkeit (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="123">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Einkünften aus selbständiger Nebenerwerbstätigkeit (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="130">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) AHV-/IV-Renten (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="131">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) AHV-/IV-Renten (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="134">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) Renten/Pensionen (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="136">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Rentenausweis(e) Renten/Pensionen (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="140">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) über Bezug von Taggeldern der Arbeitslosenkasse</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="142">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Kinder-/Familienzulage, Mutterschaftsentschädigung, Taggelder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="160">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung(en) zu Unterhaltsbeiträgen (Ehegattenalimente)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="161">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung(en) zu Unterhaltsbeiträgen für minderjährige Kinder (bis zum Monat der Volljährigkeit)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="162">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Abrechnung(en) unverteilte Erbschaft(en), Geschäfts-/Korporationsanteile</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="163">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) über weitere Einkünfte</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="164">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en)/Aufstellung über Kapitalabfindung(en) für wiederkehrende Leistungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="180">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Ertrag aus Liegenschaft(en)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="185">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) über effektive Unterhaltskosten Liegenschaft(en)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="213">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Berufsauslagen - übrige erforderliche effektive Kosten Haupterwerb Person 1</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="217">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Effektive Auslagen Nebenerwerb Person 1</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="233">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Berufsauslagen - übrige erforderliche effektive Kosten Haupterwerb Person 2</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="237">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Effektive Auslagen Nebenerwerb Person 2</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="250">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu bezahlten Schuldzinsen und/oder bestehenden Schulden</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="254">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) über geleistete Unterhaltsbeiträge an den geschiedenen oder getrennt lebenden Ehegatten/Partner</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="255">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) über geleistete Unterhaltsbeiträge für minderjährige Kinder oder volljährige Kinder in Erstausbildung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="256">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Rentenleistungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="260">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Beiträge Selbstvorsorge Säule 3a (Person 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="261">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Beiträge Selbstvorsorge Säule 3a (Person 2)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="280">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Bescheinigung(en) Beiträge staatliche Vorsorge (AHV/IV/EO) und berufliche Vorsorge (Pensionskasse) soweit nicht im Lohnausweis enthalten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="281">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung/Belege über Beiträge an politische Parteien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="283">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Vermögensverwaltungskosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="284">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu weiteren Abzügen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="292">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu geltend gemachten berufsorientierten Aus- und Weiterbildungskosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="300">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Selbstbehalt gemäss Abrechung Krankenkasse und Versicherung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="301">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Arztkosten und vom Arzt verordnete Medikamente</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="302">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Zahnarztkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="303">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Pflegepersonalkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="304">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Kosten für Aufenthalt in Spitälern</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="305">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu ärztlich verordneten Therapien, Kuraufenthalten usw.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="307">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu diversen Aufwendungen bei den Krankheits- und Unfallkosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="308">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Vergütungen Krankenkasse / Versicherungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="311">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Anteil Lebenshaltungskosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="312">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu diversen Vergütungen Dritter</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="315">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Pauschalabzug (KUI)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="324">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Aufstellung Gemeinnützige Zuwendungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="374">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Zahlungsnachweise Unterstützungsleistungen für jede unterstützte Person</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="376">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Zahlungsnachweise Kosten für fremdbetreute Kinder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="416">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu übrigen Vermögenswerten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="420">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Steuerwert aus Liegenschaft(en)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="430">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Eigenkapital Selbständige Erwerbstätigkeit</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="510">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu ausgezahlten Kapitalleistungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="574">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufstellung(en) über effektive Unterhaltskosten Liegenschaft(en)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="601">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu privaten Krankenversicherungsprämien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="602">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu privaten Unfallversicherungsprämien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="603">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu privaten Lebens- und Rentenversicherungsprämien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="604">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Zinsen von Sparkapitalien</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="605">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu erhaltenen Prämienverbilligungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="998">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Steuerausscheidung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="999">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Ausserkantonale Steuererklärung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2300">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Nur die folgenden Beilagen zum Wertschriftenverzeichnis: Steuerauszüge (falls nicht bereits elektronisch importiert), Ertragsabrechnungen auf Festgeldanlagen, Ausschüttungsbelege für nichtkotierte Titel, Originale Lotteriebescheinigungen, Kauf-/Verkaufsbelege von veräusserten IUP-Titeln</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3100">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Behinderungsbedingten Kosten bei Empfängern von IV-Leistungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3101">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Behinderungsbedingten Kosten bei Heim- und Entlastungsaufenthalten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3102">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Behinderungsbedingten Kosten - Diverse effektive Aufwendungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3103">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Behinderungsbedingten Kosten - Pauschale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3130">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Vergütungen Dritter (Krankenkasse / Versicherungen) behinderungsbedingter Kosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3131">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu Hilflosenentschädigungen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3132">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zum Anteil Lebenshaltungskosten behinderungsbedingter Kosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3133">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Beleg(e) zu diversen Vergütungen Dritter behinderungsbedingter Kosten</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4100">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Nur die folgenden Beilagen zum DA-1: Steuerauszüge (falls nicht bereits elektronisch importiert), Ertragsabrechnungen auf Festgeldanlagen, Ausschüttungsbelege für nichtkotierte Titel, Originale Lotteriebescheinigungen, Kauf-/Verkaufsbelege von veräusserten IUP-Titeln</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4300">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Nur die folgenden Beilagen zum DA-3: Steuerauszüge (falls nicht bereits elektronisch importiert), Ertragsabrechnungen auf Festgeldanlagen, Ausschüttungsbelege für nichtkotierte Titel, Originale Lotteriebescheinigungen, Kauf-/Verkaufsbelege von veräusserten IUP-Titeln</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8001">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Inventarfragebogen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8002">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Tresoröffnungsprotokoll</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9000">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Diverse Belege</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="documentDeliveryMethodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Papier</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="02">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">elektronisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="03">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">teils Papier / teils elektronisch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="scanningType">
+		<xs:sequence>
+			<xs:element name="minSet" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="defaultValues" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="fileTyp" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="SCAN">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">SCAN</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="STAT">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">STAT</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="opCode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="00">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Produktion</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Test</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sender" type="xs:string" minOccurs="0"/>
+			<xs:element name="nachrichtenTyp" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="STAT">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">EBV-Meldungen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="SCAN">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">normale Deklaration</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="erstellungsdatum" type="xs:string" minOccurs="0"/>
+			<xs:element name="batchId" type="xs:string" minOccurs="0"/>
+			<xs:element name="postInDate" type="xs:string" minOccurs="0"/>
+			<xs:element name="scanDate" type="xs:string" minOccurs="0"/>
+			<xs:element name="scanTime" type="xs:string" minOccurs="0"/>
+			<xs:element name="processName" type="xs:string" minOccurs="0"/>
+			<xs:element name="formularID" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-60001-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-60005-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-48500-0" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-48501-0" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-398-1" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-390-1" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-398-2" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-390-2" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-498-1" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-490-1" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-151-0" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-540-0" type="xs:string" minOccurs="0"/>
+			<xs:element name="R0-46010-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46030-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46015-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46016-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46017-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46009-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46857-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46858-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46862-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46866-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46860-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46850-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46854-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46853-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46851-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46865-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46899-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46100-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46075-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46076-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46200-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R0-46279-0" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE1_46001" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R303_STE1_LReg_46001" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE1_Tax_46001" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE2_46002" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R303_STE2_LReg_46002" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE2_Tax_46002" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE3_Tax_46003" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R300_STE4_Tax_46004" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV1_46275" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV1_Tax_46275" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV2_46276" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV2_Tax_46276" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV3_Tax_46277" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R340_WV4_Tax_46278" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R342_WVBeibl1_46300" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R342_WVBeibl2_46300" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA_46425" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA_Tax_46425" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA1_46426" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA1_Tax_46426" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA2_46427" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_BA2_Tax_46427" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R367_AUSWB_46428" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R367_AUSWB_Tax_46428" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R350_HiC1_46325" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R350_HiC1_Tax_46325" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R350_HiC2_46325" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R350_HiC2_Tax_46325" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R352_HiCBeibl1_46350" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R352_HiCBeibl1_Tax_46350" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R352_HiCBeibl2_46350" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R352_HiCBeibl2_Tax_46350" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R355_Schuld_46375" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R355_Schuld_Tax_46375" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_Vers_46450" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R365_Vers_46450" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R360_Vers_Tax_46450" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R365_Vers_Tax_46450" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R370_KUI1_46475" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R370_KUI1_Tax_46475" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R370_KUI2_46500" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="R370_KUI2_Tax_46500" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="DA1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="DA3" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Content -->
+	<xs:element name="contentExtension" type="zh:contentExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den content (zusätzliche Formulare)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="contentExtensionType">
+		<xs:sequence>
+			<xs:element name="listOfProperties" type="zh:listOfPropertiesType" minOccurs="0"/>
+			<xs:element name="da1" type="zh:da1Type" minOccurs="0"/>
+			<xs:element name="commentary" type="zh:commentaryType" minOccurs="0"/>
+			<xs:element name="inventoryQuestionnaire" type="zh:inventoryQuestionnaireType" minOccurs="0"/>
+			<xs:element name="safeOpeningProtocol" type="zh:safeOpeningProtocolType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Content - Aufstellung Liegenschaften -->
+	<xs:complexType name="listOfPropertiesType">
+		<xs:sequence>
+			<xs:element name="property" type="zh:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="carryOverCapitalizedValue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="carryOverCommercialValue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="capitalizedValueTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="commercialValueTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="carryOverEarningsProperties" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="earningsOtherPropertiesTotal" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="propertyType">
+		<xs:sequence>
+			<xs:element name="propertyEarnings" type="zh:propertyEarningsType" minOccurs="0"/>
+			<xs:element name="propertyMaintenanceCosts" type="zh:propertyMaintenanceCostsType" minOccurs="0"/>
+			<xs:element name="propertyNumber" type="xs:integer" minOccurs="0"/>
+			<xs:element name="town" type="xs:string" minOccurs="0"/>
+			<xs:element name="cantonOrCountry" type="xs:string" minOccurs="0"/>
+			<xs:element name="countryIfAbroad" type="zh:countryIfAbroadType" minOccurs="0"/>
+			<xs:element name="street" type="xs:string" minOccurs="0"/>
+			<xs:element name="typeOfProperty" type="xs:string" minOccurs="0"/>
+			<xs:element name="area" type="xs:integer" minOccurs="0"/>
+			<xs:element name="agriculturalUse" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="use" type="zh:useType" minOccurs="0"/>
+			<xs:element name="usufruct" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="rightOfResidence" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="purchaseDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="saleDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="capitalizedValue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="commercialValue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="rentEarningsPrivate" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="rentEarningsBusiness" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="rentEarningsTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="maintenanceCostsFlatRate" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="maintenanceCostsReal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="remainingsEarnings" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="countryIfAbroadType">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">other countries</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Germany</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">France</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Great Britain</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Ireland</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Italy</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Austria</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Portugal</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Spain</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">USA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="useType">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">self used</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">used by others</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">mixed use</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="propertyEarningsType">
+		<xs:sequence>
+			<xs:element name="earningsDetail" type="zh:earningsDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="propertyNumberReference" type="xs:integer" minOccurs="0"/>
+			<xs:element name="town" type="xs:string" minOccurs="0"/>
+			<xs:element name="street" type="xs:string" minOccurs="0"/>
+			<xs:element name="rentEarningsPrivateTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="rentEarningsBusinessTotal" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="earningsDetailType">
+		<xs:sequence>
+			<xs:element name="floor" type="xs:string" minOccurs="0"/>
+			<xs:element name="numberOfRoomsOrOfficeArea" type="xs:string" minOccurs="0"/>
+			<xs:element name="tenant" type="xs:string" minOccurs="0"/>
+			<xs:element name="durationOfRent" type="xs:string" minOccurs="0"/>
+			<xs:element name="rentEarningsPrivate" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="rentEarningsBusiness" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="propertyMaintenanceCostsType">
+		<xs:sequence>
+			<xs:element name="maintenanceCostsDetail" type="zh:maintenanceCostsDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="propertyNumberReference" type="xs:integer" minOccurs="0"/>
+			<xs:element name="town" type="xs:string" minOccurs="0"/>
+			<xs:element name="street" type="xs:string" minOccurs="0"/>
+			<xs:element name="deductableCostsTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="costAmountTotal" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="maintenanceCostsDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="typeOfMaintanance" type="xs:string" minOccurs="0"/>
+			<xs:element name="costRecipient" type="xs:string" minOccurs="0"/>
+			<xs:element name="costAmount" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="percentageIncreasingValue" type="xs:integer" minOccurs="0"/>
+			<xs:element name="deductableCosts" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Content - DA1 -->
+	<xs:complexType name="da1Type">
+		<xs:sequence>
+			<xs:element name="representativeIdentification" type="ssk:representativePersonType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Vertreter DA-1 wird von Seiten ZH nicht mehr benutzt ab der ordentlichen Steuerperiode 2024 und sollte nicht mehr geliefert werden. Ist aber vorerst noch enthalten aus Rückwärtskompatibilität.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bankAccount" type="ssk:bankAccountType" minOccurs="0"/>
+			<xs:element name="securityEntryDA1" type="zh:securityEntryDA1Type" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="domicileBeginningOfYear" type="xs:string" minOccurs="0"/>
+			<xs:element name="domicileEndOfYear" type="xs:string" minOccurs="0"/>
+			<xs:element name="numberOfChildren" type="xs:integer" minOccurs="0"/>
+			<xs:element name="debtInterest" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="administrationOfCapitalCost" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="taxableEarningsTotalForStateTax" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="taxableEarningsTotalForFederalTax" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="taxableEarningsZHForStateTax" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="taxableEarningsCHForFederalTax" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="assetsTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="earningsCommunityDepot" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="earningsCommunityLine1" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="earningsCommunityLine2" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="citizenshipUSA" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="securityNote" type="xs:string" minOccurs="0"/>
+			<xs:element name="carryOverTaxValueEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="carryOverGrossRevenue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="carryOverFlatRateTaxCharging" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="carryOverTaxSecureUSA" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="totalTaxValueEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="totalGrossRevenue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="totalFlatRateTaxCharging" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="totalTaxSecureUSA" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="attachedForms" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="bankOrRevenueAccount" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="securityEntryDA1Type">
+		<xs:sequence>
+			<xs:element name="revenueDetail" type="zh:securityRevenueDA1DetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionDivestitureDetail" type="zh:securityAdditionDivestitureDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="code" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="00">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">business assets</xs:documentation>
+								<xs:documentation xml:lang="de">G Geschäftsvermögen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">usufruct</xs:documentation>
+								<xs:documentation xml:lang="de">N Nutzniessungsvermögen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="02">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">inherited</xs:documentation>
+								<xs:documentation xml:lang="de">E Wertschriften aus Erbschaften</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="03">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">donation</xs:documentation>
+								<xs:documentation xml:lang="de">S Schenkung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="04">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">qualified investment</xs:documentation>
+								<xs:documentation xml:lang="de">Q Qualifizierte Beteiligung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="codeBusinessAssets" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="codeQualifiedInvestment" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="codeUsufruct" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="typeAccrual" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Erbschaft</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="02">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Schenkung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sharePerson1" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="sharePerson2" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="originalCurrency" type="ssk:currencyShortType" minOccurs="0"/>
+			<xs:element name="faceValueQuantity" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="securitiesNumber" type="xs:string" minOccurs="0"/>
+			<xs:element name="isin" type="zh:isinType" minOccurs="0"/>
+			<xs:element name="detailedDescription" type="xs:string" minOccurs="0"/>
+			<xs:element name="addition" type="xs:gMonthDay" minOccurs="0"/>
+			<xs:element name="divestiture" type="xs:gMonthDay" minOccurs="0"/>
+			<xs:element name="taxValueEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="grossRevenue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="percentage" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="flatRateTaxCharging" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="taxSecureUSA" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="country" type="eCH-0008f:countryIdISO2Type" minOccurs="0"/>
+			<xs:element name="securityKind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="00">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Aktie</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Anlagefonds</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>						
+						<xs:enumeration value="03">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Genussschein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="10">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Darlehen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="14">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Obligation</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="21">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Konto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="22">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Steuerauszug/Depot</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="accountType" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Sparkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Privatkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Kontokorrent</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Postkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Prämiendepot (Versicherung)</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Anteil an gemeinsamen Guthaben</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Diverse</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="paymentType" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Z">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Zinserträge</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="D">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Dividendenerträge</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="R">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Renten</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="faceValueOrQuantity" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nennwert</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Stückzahl</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="faceValueQuantityPreviousYear" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="nominalValue" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueBase" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueOriginalCurrency" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="exchangeRateDenominator" type="xs:integer" minOccurs="0"/>
+			<xs:element name="observations" type="xs:string" minOccurs="0"/>
+			<xs:element name="optionsInterestRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="optionsInterestDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="creditOfferingDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="creditPaybackDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="accountOrDepotNumber" type="xs:string" minOccurs="0"/>
+			<xs:element name="globalRevenueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="bonusShareValue" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="processDataCalculationRatinglist" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="indefaultDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="liquidationDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="inactiveDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="enteredDescription" type="xs:string" minOccurs="0"/>
+			<xs:element name="iup" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="correspondingTaxStatementId" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="securityRevenueDA1DetailType">
+		<xs:sequence>
+			<xs:element name="exDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="dueDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="faceValueQuantityAtDueDate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="stockDividend" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="revenueBaseOriginalCurrency" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="revenueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="revenueCHF" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="flatRateTaxPercentage" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="flatRateTaxCharging" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxSecureUSA" type="xs:decimal" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="isinType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="12"/>
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Content - Bemerkungs-Formular -->
+	<xs:complexType name="commentaryType">
+		<xs:sequence>
+			<xs:element name="commentary" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Content - Inventarfragebogen -->
+	<xs:complexType name="inventoryQuestionnaireType">
+		<xs:sequence>
+			<xs:element name="personalData" type="zh:inventoryQuestionnairePersonalDataType" minOccurs="0"/>
+			<xs:element name="matrimonialInformation" type="zh:inventoryQuestionnaireMatrimonialInformationType" minOccurs="0"/>
+			<xs:element name="testament" type="zh:inventoryQuestionnaireTestamentType" minOccurs="0"/>
+			<xs:element name="insurances" type="zh:inventoryQuestionnaireInsurancesType" minOccurs="0"/>
+			<xs:element name="remainingAssets" type="zh:inventoryQuestionnaireDescriptionAmountType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="usufruct" type="zh:inventoryQuestionnaireUsufructType" minOccurs="0"/>
+			<xs:element name="capitalizedProperties" type="zh:inventoryQuestionnairePropertiesType" minOccurs="0"/>
+			<xs:element name="untaxedIncomeOrAssets" type="zh:inventoryQuestionnaireUntaxedIncomeOrAssetsType" minOccurs="0"/>
+			<xs:element name="creator" type="zh:inventoryQuestionnaireCreatorType" minOccurs="0"/>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnairePersonalDataType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+			<xs:element name="dayOfDeath" type="xs:date" minOccurs="0"/>
+			<xs:element name="residence" type="xs:string" minOccurs="0"/>
+			<xs:element name="hometown" type="xs:string" minOccurs="0"/>
+			<xs:element name="maritalStatus" type="xs:string" minOccurs="0"/>
+			<xs:element name="inheritanceRepresentative" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireMatrimonialInformationType">
+		<xs:sequence>
+			<xs:element name="otherHeirs" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="maritalPropertyStatus" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Errungenschaftsbeteiligung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Gütergemeinschaft</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Gütertrennung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Weitere</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="maritalPropertyStatusOtherText" type="xs:string" minOccurs="0"/>
+			<xs:element name="marriageContract" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="marriageDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="assetsAtMarriage" type="ssk:partnerAmountType" minOccurs="0"/>
+			<xs:element name="inheritancesDonationsReceived" type="ssk:partnerAmountType" minOccurs="0"/>
+			<xs:element name="furtherOwnProperty" type="ssk:partnerAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireTestamentType">
+		<xs:sequence>
+			<xs:element name="testament" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="inheritanceContract" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="donationsDuringLife" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="donatedPerson" type="zh:inventoryQuestionnaireDonatedPersonType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="heir" type="zh:inventoryQuestionnaireHeirType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireDonatedPersonType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+			<xs:element name="vn" type="eCH-0044f:vnType" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireHeirType">
+		<xs:sequence>
+			<xs:element name="officialName" type="xs:string" minOccurs="0"/>
+			<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+			<xs:element name="vn" type="eCH-0044f:vnType" minOccurs="0"/>
+			<xs:element name="address" type="xs:string" minOccurs="0"/>
+			<xs:element name="dateOfBirth" type="xs:date" minOccurs="0"/>
+			<xs:element name="heirRelation" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireInsurancesType">
+		<xs:sequence>
+			<xs:element name="lifeInsuranceBecameDue" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="dueInsurances" type="zh:inventoryQuestionnaireDescriptionAmountType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireDescriptionAmountType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireUsufructType">
+		<xs:sequence>
+			<xs:element name="hasTaxedBurdenedAssets" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="assets" type="zh:inventoryQuestionnaireDescriptionAmountType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="hasUsufructuaryAssets" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnairePropertiesType">
+		<xs:sequence>
+			<xs:element name="hasProperties" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireUntaxedIncomeOrAssetsType">
+		<xs:sequence>
+			<xs:element name="hasUntaxedIncomeOrAssets" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="untaxedIncomeOrAssets" type="zh:inventoryQuestionnaireDescriptionAmountType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inventoryQuestionnaireCreatorType">
+		<xs:sequence>
+			<xs:element name="officialName" type="xs:string" minOccurs="0"/>
+			<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+			<xs:element name="address" type="xs:string" minOccurs="0"/>
+			<xs:element name="phone" type="eCH-0046f:phoneNumberType" minOccurs="0"/>
+			<xs:element name="email" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Content - Tresoröffnungsprotokoll -->
+	<xs:complexType name="safeOpeningProtocolType">
+		<xs:sequence>
+			<xs:element name="creator" type="zh:safeOpeningProtocolCreatorType" minOccurs="0"/>
+			<xs:element name="hasClosedDepositBoxes" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="placeOfDepositBox" type="xs:string" minOccurs="0"/>
+			<xs:element name="instituteNameAddress" type="xs:string" minOccurs="0"/>
+			<xs:element name="safeContent" type="zh:safeContentType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="safeOpeningProtocolCreatorType">
+		<xs:sequence>
+			<xs:element name="officialName" type="xs:string" minOccurs="0"/>
+			<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+			<xs:element name="address" type="xs:string" minOccurs="0"/>
+			<xs:element name="phoneNumber" type="eCH-0046f:phoneNumberType" minOccurs="0"/>
+			<xs:element name="email" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="safeContentType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Personalien -->
+	<xs:element name="personDataPartner1Extension" type="zh:personDataExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für Personalien Partner</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="personDataPartner2Extension" type="zh:personDataExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für Personalien Partner 2</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="personDataExtensionType">
+		<xs:sequence>
+			<xs:element name="email" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Aufstellung Kinder -->
+	<!-- Im Haushalt -->
+	<xs:element name="childDataInhouseExtension" type="zh:childDataInhouseExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für Kind im eigenen Haushalt</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="childDataInhouseExtensionType">
+		<xs:sequence>
+			<xs:element name="receivedAlimonyPayer" type="zh:alimonyPersonType" minOccurs="0"/>
+			<xs:element name="receivedAlimonyDetail" type="zh:childAlimonyDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="classificationDetail" type="zh:childExternalCareClassificationDetailType" minOccurs="0"/>
+			<xs:element name="receivedAlimonyImmaturityTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="receivedAlimonyMaturityTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="receivedAlimony" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="externalCareDetail" type="zh:childExternalCareDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="externalCareTotal" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Ausserhalb Haushalt -->
+	<xs:element name="childDataOuthouseExtension" type="zh:childDataOuthouseExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für Kind ausserhalb des Haushalts</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="childDataOuthouseExtensionType">
+		<xs:sequence>
+			<xs:element name="paidAlimonyReceiver" type="zh:alimonyPersonType" minOccurs="0"/>
+			<xs:element name="paidAlimonyDetail" type="zh:childAlimonyDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="classificationDetail" type="zh:childExternalCareClassificationDetailType" minOccurs="0"/>
+			<xs:element name="externalCareDetail" type="zh:childExternalCareDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="paidAlimonyImmaturityTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="paidAlimonyMaturityTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="paidAlimony" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="externalCareTotal" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="paidAlimonyBoth" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="paidAlimonyMajor" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="livesWithParent" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="childExternalCareClassificationDetailType">
+		<xs:sequence>
+			<xs:element name="mutualChildCouple" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="custodyChild" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">sole custody</xs:documentation>
+								<xs:documentation xml:lang="de">alleiniges Sorgerecht</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">joint custody</xs:documentation>
+								<xs:documentation xml:lang="de">gemeinsames Sorgerecht</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="en">other parent has sole custody</xs:documentation>
+								<xs:documentation xml:lang="de">anderer Elternteil hat alleiniges Sorgerecht</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="alternatingCare" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="financingCostsOfLiving" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="concubinage" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hilfstypen -->
+	<xs:complexType name="alimonyPersonType">
+		<xs:sequence>
+			<xs:element name="firstName" type="xs:string" minOccurs="0"/>
+			<xs:element name="officialName" type="xs:string" minOccurs="0"/>
+			<xs:element name="address" type="xs:string" minOccurs="0"/>
+			<xs:element name="zip" type="xs:string" minOccurs="0"/>
+			<xs:element name="town" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="childAlimonyDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="amountImmaturity" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="amountMaturity" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="childExternalCareDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="receiver" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Aufstellung unterstützte Personen in Ihrem Haushalt -->
+	<xs:element name="disabledPersonSupportInhouseExtension" type="zh:disabledPersonSupportInhouseExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für unterstützte Person</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="disabledPersonSupportInhouseExtensionType">
+		<xs:sequence>
+			<xs:element name="supportDetail" type="zh:disabledPersonSupportDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="supportDeduction" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="financingCostsOfLiving" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Aufstellung unterstützte Personen ausserhalb Ihres Haushaltes -->
+	<xs:element name="disabledPersonSupportOuthouseExtension" type="zh:disabledPersonSupportOuthouseExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für unterstützte Person</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="disabledPersonSupportOuthouseExtensionType">
+		<xs:sequence>
+			<xs:element name="supportDetail" type="zh:disabledPersonSupportDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="supportDeduction" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="disabledPersonSupportDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Einkommen -->
+	<xs:element name="revenueExtension" type="zh:revenueExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Einkommen</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="revenueExtensionType">
+		<xs:sequence>
+			<xs:element name="employedMainRevenueDetailP1" type="zh:employedMainRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="employedMainRevenueDetailP2" type="zh:employedMainRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="employedSidelineRevenueDetailP1" type="zh:employedSidelineRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="employedSidelineRevenueDetailP2" type="zh:employedSidelineRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="selfemployedSidelineRevenueDetailP1" type="zh:selfemployedRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="selfemployedSidelineRevenueDetailP2" type="zh:selfemployedRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="pensionDetailP1" type="zh:pensionDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="pensionDetailP2" type="zh:pensionDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mainRevenueSupportSheetAWithoutP1" type="zh:supportSheetAWithoutType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mainRevenueSupportSheetAWithoutP2" type="zh:supportSheetAWithoutType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mainRevenueSupportSheetAWithP1" type="zh:supportSheetAWithType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mainRevenueSupportSheetAWithP2" type="zh:supportSheetAWithType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="sidelineRevenueSupportSheetAWithoutP1" type="zh:supportSheetAWithoutType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="sidelineRevenueSupportSheetAWithoutP2" type="zh:supportSheetAWithoutType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="sidelineRevenueSupportSheetAWithP1" type="zh:supportSheetAWithType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="sidelineRevenueSupportSheetAWithP2" type="zh:supportSheetAWithType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="mainRevenueSupportSheetBAccountingP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="mainRevenueSupportSheetBAccountingP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="mainRevenueSupportSheetBNoAccountingP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="mainRevenueSupportSheetBNoAccountingP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetBAccountingP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetBAccountingP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetBNoAccountingP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetBNoAccountingP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="mainRevenueSupportSheetGP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="mainRevenueSupportSheetGP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetGP1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="sidelineRevenueSupportSheetGP2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="propertyCantonOrCountry" type="xs:string" minOccurs="0"/>
+			<xs:element name="propertyCountryIfAbroad" type="zh:countryIfAbroadType" minOccurs="0"/>
+			<xs:element name="propertyDeductionEffectiveDetail" type="zh:propertyMaintenanceCostsType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="relevantCooperationMainP1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="relevantCooperationMainP2" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="relevantCooperationSidelineP1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="relevantCooperationSidelineP2" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="liquidityEarningsDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="restRevenueAlimonyDetail" type="zh:restRevenueAlimonyDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="revenueRestRevenueFreeTextDetail" type="zh:revenueRestRevenueFreeTextDetailType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="employedMainRevenueDetailType">
+		<xs:sequence>
+			<xs:element name="beginDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="endDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="entrepreneur" type="xs:string" minOccurs="0"/>
+			<xs:element name="revenue" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="employedSidelineRevenueDetailType">
+		<xs:sequence>
+			<xs:element name="beginDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="endDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="revenue" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="selfemployedRevenueDetailType">
+		<xs:sequence>
+			<xs:element name="beginDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="endDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="revenue" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pensionDetailType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount100" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="percentage" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="amountFinal" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hilfsblatt A mit vereinfachter Buchhaltung -->
+	<xs:complexType name="supportSheetAWithoutType">
+		<xs:annotation>
+			<xs:documentation>Hilfsblatt A für Selbständigerwerbende mit vereinfachter Buchführung</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="costOfProduction" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="declarationValue" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="underevaluation" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="valueFiscalYearStart" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="entry" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="debitEntry" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="valueBeforeWritedown" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="bookedWritedown" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="valueFiscalYearEnd" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="businessExpenseOverheadDetail" type="zh:businessExpenseOverheadDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="businessLiabilities" type="ssk:liabilitiesListingType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>(3.) Aufstellung von Geschäftsschulden (Gläubiger, Schuld, Schuldzins)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mainRevenueSourcePartner1" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="mainRevenueSourcePartner2" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 2</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sidelineRevenueSourcePartner1" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sidelineRevenueSourcePartner2" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 2</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="uid" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="identityFellowPartnerLine1" type="xs:string" minOccurs="0"/>
+			<xs:element name="identityFellowPartnerLine2" type="xs:string" minOccurs="0"/>
+			<xs:element name="identityFellowPartnerLine3" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine1" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine2" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine3" type="xs:string" minOccurs="0"/>
+			<xs:element name="businessSector" type="xs:string" minOccurs="0"/>
+			<xs:element name="fiscalYearStartDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="fiscalYearEndDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="accountingApproach" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ist-Methode</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Soll-Methode</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="underevaluationPercentageStart" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="underevaluationPercentageEnd" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageBusinessProperty" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageVehicles" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageTools" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageFacilities" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageMovableGoods" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageFreeOption" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="textFreeOption" type="xs:string" minOccurs="0"/>
+			<xs:element name="totalBusinessLiabilities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="totalBusinessLiabilitiesInterest" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessVolumeGoodsCash" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeGoodsBank" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeGoodsReturnService" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeInKind" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeCostumersAssetsEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeSubTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeCustomersAssetsBeginningOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeDebtsVAT" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessVolumeTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseStockBeginningOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpensePayments" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseDebtsEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseSubTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseStockEndOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseDebtsBeginningOfYear" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseTotal1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="goodsExpenseTotal2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="grossMargin" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="otherEarningsFlat" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="otherEarningsGrossEarningsBusinessAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="otherEarningsProvisions" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="otherEarningsCapitalGain" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="otherEarningsCapitalGainText" type="xs:string" minOccurs="0"/>
+			<xs:element name="otherEarningsAdditionalEarnings" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="otherEarningsAdditionalEarningsText" type="xs:string" minOccurs="0"/>
+			<xs:element name="subTotalPage2" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="subTotalPage3" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessExpenseEmployees" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpensePersonalAHVAndFinancialSecurity" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessExpenseRentBusiness" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseRentPrivate" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseVehicle" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseVehiclePrivatePart" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseVehiclePrivatePartSubTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseVehicleModel" type="xs:string" minOccurs="0"/>
+			<xs:element name="businessExpenseVehiclePrice" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseTotalBusinessLiabilitiesInterest" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessExpenseOverhead" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseOverheadPrivate" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseOverheadPrivateSubTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseWritedown" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseTotal1" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessExpenseTotal2" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="incomeSelfEmployedSubTotalAHV" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="deductionPersonalAHV" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="deductionGrossEarningsBusinessAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="furtherDeductionsText" type="xs:string" minOccurs="0"/>
+			<xs:element name="furtherDeductions" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="incomeSelfEmployedTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessAssetsCash" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsBank" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsCustomerAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsContingencyReserves" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsStock" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsOtherAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsTools" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsFacilities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsMovableGoods" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsVehicles" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsFreeOption" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsTextFreeOption" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsTotalAssetsWithoutProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityTotalAssetsWithoutProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityBusinessSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityTotalBusinessLiabilities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equitySelfEmployedEquityWithoutSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVTotalAssetsWithoutProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVTotalBusinessLiabilities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVRepartitionValueBusinessProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVInvestedEquity" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="buyInContributionProprietorPensionPlan" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="supportSheetAWithoutSignature" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="fiscalYearType">
+		<xs:sequence>
+			<xs:element name="fiscalYearStartValue" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="fiscalYearEndValue" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="writedownType">
+		<xs:sequence>
+			<xs:element name="businessProperty" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="vehicles" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="tools" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="facilities" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="movableGoods" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="freeOption" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="businessExpenseOverheadDetailType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="privateAmount" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="businessAmount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hilfsblatt A mit kaufmännischer Buchführung -->
+	<xs:complexType name="supportSheetAWithType">
+		<xs:annotation>
+			<xs:documentation>Hilfsblatt A mit kaufmännischer Buchführung</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="costOfProduction" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="declarationValue" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="underevaluation" type="zh:fiscalYearType" minOccurs="0"/>
+			<xs:element name="valueFiscalYearStart" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="entry" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="debitEntry" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="valueBeforeWritedown" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="bookedWritedown" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="textFreeOption" type="xs:string" minOccurs="0"/>
+			<xs:element name="valueFiscalYearEnd" type="zh:writedownType" minOccurs="0"/>
+			<xs:element name="mainRevenueSourcePartner1" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="mainRevenueSourcePartner2" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 2</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sidelineRevenueSourcePartner1" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sidelineRevenueSourcePartner2" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ankreuzfeld Haupterwerb Ehemann/Person 2</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Ja</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="uid" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="identityFellowPartnerLine1" type="xs:string" minOccurs="0"/>
+			<xs:element name="identityFellowPartnerLine2" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine1" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine2" type="xs:string" minOccurs="0"/>
+			<xs:element name="companyNameLine3" type="xs:string" minOccurs="0"/>
+			<xs:element name="businessSector" type="xs:string" minOccurs="0"/>
+			<xs:element name="fiscalYearStartDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="fiscalYearEndDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="grossTurnover" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="costsForMaterialGoods3rdServices" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="interestOnDebtIncomeStatement" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="earningsNetProfit" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="chargingCashPayout" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="chargingPersonalColumns" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="chargingFurtherCharging" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="chargingFurtherChargingText" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="chargingInKind" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="chargingFurtherCorrectionSign" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>(2.5) Vorzeichen der weiteren Korrekturen. Hinweis: Beim Ausdrucken soll das Feld entweder ein Minuszeichen enthalten oder leer bleiben</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">leeres Feld -> positive Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Minuszeichen eingetragen -> negative Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="chargingFurtherCorrection" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="chargingFurtherCorrectionText" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="incomeSelfEmployedSubTotalAHV" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="deductionPersonalAHV" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="deductionGrossEarningsBusinessAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="furtherDeductions" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="furtherDeductionsText" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="incomeSelfEmployedTotal" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="underevaluationPercentageStart" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="underevaluationPercentageEnd" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageBusinessProperty" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageVehicles" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageTools" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageFacilities" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageMovableGoods" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="writedownPercentageFreeOption" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="businessAssetsAccordingToBalanceSheet" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsUndisclosedReservesTaxedAsIncome" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsTotalAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsBusinessSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="businessAssetsTotalAssetsWithoutSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="debtsAccordingToBalanceSheet" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="debtsUndisclosedReservesTaxedAsIncome" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="debtsTotalDebts" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityTotalBusinessAssetsWithoutSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityTotalDebts" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityDiffIncomeAssetTaxValueBusinessPropertiesSign" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>(10.3) Vorzeichen der Differenz Einkommenssteuerwert/Vermögenssteuerwert Geschäftsliegenschaften. Hinweis: Beim Ausdrucken soll das Feld entweder ein Minuszeichen enthalten oder leer bleiben</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">leeres Feld -> positive Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Minuszeichen eingetragen -> negative Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="equityDiffIncomeAssetTaxValueBusinessProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equitySelfEmployedEquityWithoutSecurities" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVTotalBusinessAssets" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVTotalDebts" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVDiffIncomeTaxRepartitionValueBusinessPropertiesSign" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>(11.3) Vorzeichen der Differenz Einkommenssteuerwert/Repartitionswert Geschäftsliegenschaften. Hinweis: Beim Ausdrucken soll das Feld entweder ein Minuszeichen enthalten oder leer bleiben</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">leeres Feld -> positive Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Minuszeichen eingetragen -> negative Korrektur</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="equityAHVDiffIncomeTaxRepartitionValueBusinessProperties" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="equityAHVInvestedEquity" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="buyInContributionProprietorPensionPlan" type="ssk:moneyType1" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="supportSheetAWithSignature" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="restRevenueAlimonyDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="revenueRestRevenueFreeTextDetailType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Abzüge -->
+	<xs:element name="deductionExtension" type="zh:deductionExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Abzüge</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="deductionExtensionType">
+		<xs:sequence>
+			<xs:element name="identificationPersonAlimony" type="eCH-0044f:personIdentificationType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="identificationAddressAlimony" type="eCH-0046f:addressType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="paymentAlimonyDetail" type="zh:paymentAlimonyDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="furtherDeductionProvisionDetail" type="zh:furtherDeductionProvisionDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="furtherDeductionFinancialManagementCostDetail" type="zh:furtherDeductionFinancialManagementCostDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="furtherDeductionFreeTextDetail" type="zh:furtherDeductionFreeTextDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="furtherDeductionPoliticalPartyDetail" type="zh:furtherDeductionPoliticalPartyDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="furtherDeductionFreeTextSubtotal" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextOther" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionPoliticalPartyEffectiveAmount" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="furtherDeductionPoliticalPartyDeductibleAmount" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1regular2column" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2regular2column" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1buyin2column" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2buyin2column" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1AHVIVEmployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2AHVIVEmployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1AHVIVUnemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2AHVIVUnemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1AHVIVSelfemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2AHVIVSelfemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP1buyin2columnSelfemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionProvisionP2buyin2columnSelfemployed" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP1NBU" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP2NBU" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP1RealizedHiddenAssets" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP2RealizedHiddenAssets" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP1PropertyEarning" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP2PropertyEarning" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextTotalLotteryWinningsCosts" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP1FireDepartmentPay" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP2FireDepartmentPay" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP1PatentResearchDevelopment" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="furtherDeductionFreeTextP2PatentResearchDevelopment" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="paymentAlimonyDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="furtherDeductionProvisionDetailType">
+		<xs:sequence>
+			<xs:element name="kind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">2. Säule ordentlich</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">2. Säule Einkauf</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">AHV/IV Erwerbstätige</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">AHV/IV Nichterwerbstätige</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="person" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="P1"/>
+						<xs:enumeration value="P2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="furtherDeductionFinancialManagementCostDetailType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="correspondingTaxStatementId" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="furtherDeductionFreeTextDetailType">
+		<xs:sequence>
+			<xs:element name="kind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Sonstige</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">NBU Ehemann/P1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">NBU Ehefrau/P2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Diff. Grundstückgewinn EM/EP/P1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Diff. Grundstückgewinn EF/P2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Realisierte stille Reserven EM/EP/P1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="8">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Realisierte stille Reserven EF/P2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="9">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Einsatzkosten Lotteriegewinn</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="10">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Freibetrag Feuerwehrsold P1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="11">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Freibetrag Feuerwehrsold P2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="12">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Patente, Forschung &amp; Entwicklung EM/EP/P1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="13">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Patente, Forschung &amp; Entwicklung EF/P2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="furtherDeductionPoliticalPartyDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Einkommensberechnung -->
+	<xs:element name="revenueCalculationExtension" type="zh:revenueCalculationExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Einkommen</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="revenueCalculationExtensionType">
+		<xs:sequence>
+			<xs:element name="deductionCharityDetail" type="zh:deductionCharityDetailType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="deductionCharityDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular Vermögen -->
+	<xs:element name="assetExtension" type="zh:assetExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Vermögen im In- und Ausland</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="assetExtensionType">
+		<xs:sequence>
+			<xs:element name="selfEmployedBusinessCapitalMainRevenuePartner1" type="ssk:moneyType1" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="selfEmployedBusinessCapitalMainRevenuePartner2" type="ssk:moneyType1" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="selfEmployedBusinessCapitalSidelineRevenuePartner1" type="ssk:moneyType1" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="selfEmployedBusinessCapitalSidelineRevenuePartner2" type="ssk:moneyType1" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="moveablePropertyVehicles" type="zh:movablePropertyVehicleType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="movablePropertyVehicleType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="purchasePrice" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="year" type="xs:gYear" minOccurs="0"/>
+			<xs:element name="value" type="ssk:privateBusinessType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="benefitExtension" type="zh:benefitExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Kapitalleistungen</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="benefitExtensionType">
+		<xs:sequence>
+			<xs:element name="restBenefitPaymentReceivedDetail" type="ssk:restBenefitType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="restBenefitPaidOutDetail" type="ssk:restBenefitType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="restBenefitExtension" type="zh:restBenefitExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Kapitalleistungen, Ziffer 50</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="restBenefitExtensionType">
+		<xs:sequence>
+			<xs:element name="restBenefitDateExtended" type="xs:date" minOccurs="0"/>
+			<xs:element name="restBenefitVn" type="eCH-0044f:vnType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attachedFormsExtension" type="zh:attachedFormsExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für den Abschnitt Kapitalleistungen</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="attachedFormsExtensionType">
+		<xs:sequence>
+			<xs:element name="attachedFreeTextNumber" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular -->
+	<xs:element name="mainFormExtension" type="zh:mainFormExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für das Hauptformular</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mainFormExtensionType">
+		<xs:sequence>
+			<xs:element name="inheritanceEtcDetail" type="zh:inheritanceEtcDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="valuationDifference" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="inheritanceEtcDetailType">
+		<xs:sequence>
+			<xs:element name="addressInformation" type="eCH-0046f:addressType" minOccurs="0"/>
+			<xs:element name="inheritanceKind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">unverteilte Erbschaft</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Geschäfts-/Korporationsanteil</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="relation" type="xs:string" minOccurs="0"/>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="asset" type="ssk:moneyType1" minOccurs="0"/>
+			<xs:element name="revenue" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Hauptformular - Vertreter -->
+	<xs:element name="representativePersonExtension" type="zh:representativePersonExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für das Hauptformular</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="representativePersonExtensionType">
+		<xs:sequence>
+			<xs:element name="thId" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Berufsauslagen -->
+	<xs:element name="jobExpensesPartner1Extension" type="zh:jobExpensesExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für die Berufsauslagen (Ehemann)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="jobExpensesPartner2Extension" type="zh:jobExpensesExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für die Berufsauslagen (Ehefrau)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="jobExpensesExtensionType">
+		<xs:sequence>
+			<xs:element name="remainingJobCostEffectiveDetail" type="zh:jobExpensesDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="weekdayStayDetail" type="zh:jobExpensesDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="sidelineEffectiveDetail" type="zh:jobExpensesDetailType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="jobExpensesDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date" minOccurs="0"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="amount" type="ssk:moneyType1" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Berufsorientierte Aus- und Weiterbildungskosten -->
+	<xs:element name="jobOrientedFurtherEducationCostExtension" type="zh:jobOrientedFurtherEducationCostExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für die beurfsorientierten Aus- und Weiterbildungskosten</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="jobOrientedFurtherEducationCostExtensionType">
+		<xs:sequence>
+			<xs:element name="allowableDeductionPartner1" type="ssk:taxAmountType" minOccurs="0"/>
+			<xs:element name="allowableDeductionPartner2" type="ssk:taxAmountType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Wertschriftenverzeichnis -->
+	<xs:element name="bankAccountExtension" type="zh:bankAccountExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für die Bankangaben für die Verrechnungssteuererstattung</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="bankAccountExtensionType">
+		<xs:sequence>
+			<xs:element name="officialName" type="eCH-0044f:baseNameType" minOccurs="0"/>
+			<xs:element name="firstName" type="eCH-0044f:baseNameType" minOccurs="0"/>
+			<xs:element name="street" type="eCH-0010f:streetType" minOccurs="0"/>
+			<xs:element name="houseNumber" type="eCH-0010f:houseNumberType" minOccurs="0"/>
+			<xs:element name="town" type="eCH-0010f:townType" minOccurs="0"/>
+			<xs:element name="swissZipCode" type="eCH-0010f:swissZipCodeType" minOccurs="0"/>
+			<xs:element name="foreignZipCode" type="eCH-0010f:foreignZipCodeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="listOfSecuritiesExtension" type="zh:listOfSecuritiesExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für das Wertschriftenverzeichnis</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="listOfSecuritiesExtensionType">
+		<xs:sequence>
+			<xs:element name="attachedForms" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="attachedFormDA1" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="attachedBank" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="securityEntryExtension" type="zh:securityEntryExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für einen Wertschrifteneintrag</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="securityEntryExtensionType">
+		<xs:sequence>
+			<xs:element name="securityKind" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="00">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Aktie</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Anlagefonds</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="02">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Partizipationsschein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="03">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Genussschein</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="04">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Raiffeisen- oder Genossenschaftsanteil</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="05">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">GmbH-Anteil</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="10">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Darlehen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="11">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Derivatives Finanzinstrument</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="12">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Fest-, Termingeld und Treuhandanlage</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="13">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Kassenobligation</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="14">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Obligation</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="15">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Option</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="16">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Optionsanleihe</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="17">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Wandelanleihe</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="20">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Übrige</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="21">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Konto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="22">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Steuerauszug/Depot</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="23">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Lotteriegewinn</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="24">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Guthaben Anteil</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="25">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Vergütungs- und Ausgleichszins</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="26">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Kryptowährungen</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="isin" type="zh:isinType" minOccurs="0"/>
+			<xs:element name="accountType" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Sparkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Privatkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Kontokorrent</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Postkonto</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Prämiendepot (Versicherung)</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="5">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Anteil an gemeinsamen Guthaben</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="6">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Diverse</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="7">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Stockwerkeigentum</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="country" type="eCH-0008f:countryIdISO2Type" minOccurs="0"/>
+			<xs:element name="faceValueOrQuantity" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Nennwert</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Stückzahl</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="faceValueQuantityPreviousYear" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="nominalValue" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueBase" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueOriginalCurrency" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="taxValueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="exchangeRateDenominator" type="xs:integer" minOccurs="0"/>
+			<xs:element name="revenueDetail" type="zh:securityRevenueDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionDivestitureDetail" type="zh:securityAdditionDivestitureDetailType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="observations" type="xs:string" minOccurs="0"/>
+			<xs:element name="optionsInterestRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="creditOfferingDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="creditPaybackDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="accountOrDepotNumber" type="xs:string" minOccurs="0"/>
+			<xs:element name="accountDescription" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="globalRevenueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="bonusShareValue" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="processDataCalculationRatinglist" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="qualifiedParticipation" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="inheritance" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="businessAssets" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="donation" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="usufructuary" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="sharePartner1" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="sharePartner2" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="indefaultDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="liquidationDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="inactiveDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="blocked" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="blockingTo" type="xs:date" minOccurs="0"/>
+			<xs:element name="savingsAccount" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="enteredDescription" type="xs:string" minOccurs="0"/>
+			<xs:element name="correspondingTaxStatementId" type="xs:string" minOccurs="0"/>
+			<xs:element name="iup" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="codeBusinessAssets" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="codeQualifiedInvestment" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="codeUsufruct" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="typeAccrual" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="01">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Erbschaft</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="02">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Schenkung</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sharePerson1" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="sharePerson2" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="uid" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="securityRevenueDetailType">
+		<xs:sequence>
+			<xs:element name="exDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="dueDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="faceValueQuantityAtDueDate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="stockDividend" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="revenueBaseOriginalCurrency" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="revenueExchangeRate" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="revenueACHF" type="xs:decimal" minOccurs="0"/>
+			<xs:element name="revenueBCHF" type="xs:decimal" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="securityAdditionDivestitureDetailType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:date"/>
+			<xs:element name="faceValueQuantity" type="xs:decimal"/>
+			<xs:choice>
+				<xs:element name="additionReason" type="zh:securityAdditionReasonType"/>
+				<xs:element name="divestitureReason" type="zh:securityDivestitureReasonType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="securityAdditionReasonType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="00">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Kauf</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="01">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Gratisaktie/Stockdividende</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="02">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufteilung/Umwandlung (Split)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="03">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Fusion/Umtausch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="04">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Abspaltung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="05">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Schenkung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="06">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Erbanfall/Vorempfang</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="securityDivestitureReasonType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Verkauf</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Schenkung</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="12">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aufteilung/Umwandlung (Split)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="13">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Fusion/Umtausch</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="14">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Aktienrückgabe/Direkte Teilliquidation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="15">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Indirekte Teilliquidation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="16">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">Vorempfang</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Versicherungsprämen/Sparzinsen: scheinbar keine Erweiterungen nötig -->
+	<!-- Krankheits/Unfallkosten: scheinbar keine Erweiterungen nötig -->
+	<!-- Behinderungsbedingte Kosten: scheinbar keine Erweiterungen nötig -->
+	<!-- Schuldenverzeichnis -->
+	<xs:element name="liabilitiesListingExtension" type="zh:liabilitiesListingExtensionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Erweiterungs-Element für eine Schuldenposition</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="liabilitiesListingExtensionType">
+		<xs:sequence>
+			<xs:element name="correspondingTaxStatementId" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Qualifizierte Beteiligungen privat: scheinbar keine Erweiterungen nötig -->
+	<!-- Qualifizierte Beteiligungen geschäftlich (in PrivateTax nicht verwendet) -->
+	<!-- Qualifizierte Beteiligungen geschäftlich (in PrivateTax nicht verwendet): scheinbar keine Erweiterungen nötig -->
+</xs:schema>

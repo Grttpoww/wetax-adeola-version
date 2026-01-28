@@ -141,15 +141,18 @@ function buildPersonDataPartner1(parent: any, personData: PersonDataPartner1): v
   const identificationEl = personDataEl.ele('partnerPersonIdentification')
   identificationEl.ele('officialName').txt(personData.partnerPersonIdentification.officialName)
   identificationEl.ele('firstName').txt(personData.partnerPersonIdentification.firstName)
-  identificationEl.ele('vn').txt(personData.partnerPersonIdentification.vn)
-  
-  if (personData.partnerPersonIdentification.dateOfBirth) {
-    identificationEl.ele('dateOfBirth').txt(personData.partnerPersonIdentification.dateOfBirth)
-  }
-  
+
+  // IMPORTANT: element order must match XSD sequence:
+  // cantonExtension?, officialName, firstName, sex?, dateOfBirth?, vn, otherPersonId*
   if (personData.partnerPersonIdentification.sex !== undefined) {
     identificationEl.ele('sex').txt(personData.partnerPersonIdentification.sex.toString())
   }
+
+  if (personData.partnerPersonIdentification.dateOfBirth) {
+    identificationEl.ele('dateOfBirth').txt(personData.partnerPersonIdentification.dateOfBirth)
+  }
+
+  identificationEl.ele('vn').txt(personData.partnerPersonIdentification.vn)
   
   // Address Information
   if (personData.addressInformation) {
