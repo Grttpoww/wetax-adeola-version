@@ -41,6 +41,7 @@ export type TaxReturnData = {
       plz: number | undefined // '8050'
       stadt: string | undefined // 'zurich'
       land: string | undefined // 'schweiz'
+      taxMunicipality?: string | undefined // BFS number as string (used by eCH-0119 export)
       zivilstand: string | undefined
       konfession: string | undefined
       beruf: string | undefined
