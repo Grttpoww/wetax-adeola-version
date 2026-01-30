@@ -1,0 +1,308 @@
+{
+  "@minorVersion": 0,
+  "header": {
+    "taxPeriod": "2024",
+    "source": 0,
+    "canton": "ZH",
+    "transactionDate": "2026-01-30T20:30:14.155Z",
+    "sourceDescription": "WETAX Mobile App",
+    "periodFrom": "2024-01-01",
+    "periodTo": "2024-12-31",
+    "transactionNumber": "WETAX-2024-697d14d60fc5945395f30a98",
+    "attachment": [
+      {
+        "title": "saeule3a-beleg-2024.pdf",
+        "documentFormat": "application/pdf",
+        "documentIdentification": {
+          "documentCanton": "ZH",
+          "documentType": "Säule 3a Beleg"
+        },
+        "file": [
+          {
+            "pathFileName": "dummy-documents/saeule3a-beleg-2024.pdf",
+            "internalSortOrder": 1
+          }
+        ],
+        "cantonExtension": {
+          "canton": "ZH"
+        }
+      },
+      {
+        "title": "versicherungspolice-2024.pdf",
+        "documentFormat": "application/pdf",
+        "documentIdentification": {
+          "documentCanton": "ZH",
+          "documentType": "Versicherungspolice"
+        },
+        "file": [
+          {
+            "pathFileName": "dummy-documents/versicherungspolice-2024.pdf",
+            "internalSortOrder": 1
+          }
+        ],
+        "cantonExtension": {
+          "canton": "ZH"
+        }
+      },
+      {
+        "title": "hypothekarschuldenbrief-2024.pdf",
+        "documentFormat": "application/pdf",
+        "documentIdentification": {
+          "documentCanton": "ZH",
+          "documentType": "Hypothekarschuldenbrief"
+        },
+        "file": [
+          {
+            "pathFileName": "dummy-documents/hypothekarschuldenbrief-2024.pdf",
+            "internalSortOrder": 1
+          }
+        ],
+        "cantonExtension": {
+          "canton": "ZH"
+        }
+      }
+    ],
+    "cantonExtension": {
+      "canton": "ZH",
+      "documentList": [
+        {
+          "documentIdentification": {
+            "documentCanton": "ZH",
+            "documentType": "Lohnausweis(e) pro Arbeitgeber"
+          },
+          "attachmentFile": [
+            {
+              "pathFileName": "documents/697d14d60fc5945395f30a98/lohnausweis_Tech_Solutions_AG_0.pdf",
+              "internalSortOrder": 1
+            },
+            {
+              "pathFileName": "documents/697d14d60fc5945395f30a98/lohnausweis_Startup_Consulting_GmbH_1.pdf",
+              "internalSortOrder": 2
+            }
+          ]
+        },
+        {
+          "documentIdentification": {
+            "documentCanton": "ZH",
+            "documentType": "Bankauszüge"
+          },
+          "attachmentFile": [
+            {
+              "pathFileName": "documents/697d14d60fc5945395f30a98/bankauszug_UBS_0.pdf",
+              "internalSortOrder": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "content": {
+    "mainForm": {
+      "personDataPartner1": {
+        "partnerPersonIdentification": {
+          "officialName": "Mustermann",
+          "firstName": "Max",
+          "vn": "756.1985.1234.56",
+          "dateOfBirth": "1989-03-15"
+        },
+        "addressInformation": {
+          "street": "Bahnhofstrasse",
+          "houseNumber": "15",
+          "town": "Zürich",
+          "swissZipCode": "8001",
+          "country": "CH"
+        },
+        "maritalStatusTax": 1,
+        "religion": 2,
+        "job": "Software-Architekt",
+        "employer": "Tech Solutions AG",
+        "placeOfWork": "Zürich",
+        "phoneNumberPrivate": {
+          "phoneNumber": "+41 79 555 12 34"
+        },
+        "taxMunicipality": {
+          "municipalityId": 261,
+          "cantonAbbreviation": "ZH"
+        }
+      },
+      "revenue": {
+        "employedMainRevenue": {
+          "partner1Amount": 135000
+        },
+        "securitiesRevenue": {
+          "cantonalTax": 2700,
+          "federalTax": 2700
+        },
+        "propertyNotionalRentalValue": 14560,
+        "totalAmountRevenue": {
+          "cantonalTax": 152260,
+          "federalTax": 152260
+        }
+      },
+      "deduction": {
+        "jobExpensesPartner1": {
+          "cantonalTax": 5500,
+          "federalTax": 5500
+        },
+        "provision3aPartner1Deduction": {
+          "cantonalTax": 6500,
+          "federalTax": 6500
+        },
+        "insuranceAndInterest": {
+          "cantonalTax": 2900,
+          "federalTax": 1800
+        },
+        "amountLiabilitiesInterest": {
+          "cantonalTax": 10000,
+          "federalTax": 10000
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 24900,
+          "federalTax": 23800
+        },
+        "provision3aPartner1Effective": 6500
+      },
+      "revenueCalculation": {
+        "totalAmountRevenue": {
+          "cantonalTax": 152260,
+          "federalTax": 152260
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 24900,
+          "federalTax": 23800
+        },
+        "netIncome": {
+          "cantonalTax": 127360,
+          "federalTax": 128460
+        },
+        "adjustedNetIncome": {
+          "cantonalTax": 127360,
+          "federalTax": 128460
+        },
+        "totalAmountFiscalRevenue": {
+          "cantonalTax": 127360,
+          "federalTax": 128460
+        }
+      },
+      "asset": {
+        "movablePropertyCashValue": {
+          "fiscalValue": 5000
+        },
+        "movablePropertySecuritiesAndAssets": {
+          "fiscalValue": 85000
+        },
+        "movablePropertyHeritageEtc": {
+          "fiscalValue": 10000
+        },
+        "movablePropertyVehicle": {
+          "fiscalValue": 15000
+        },
+        "propertyHouseOrFlat": {
+          "fiscalValue": 520000
+        },
+        "totalAmountAssets": {
+          "fiscalValue": 635000
+        },
+        "totalAmountFiscalAssets": {
+          "fiscalValue": 235000
+        },
+        "moveablePropertyVehicleDescription": "Tesla Model 3",
+        "moveablePropertyVehiclePurchasePrice": 25000,
+        "moveablePropertyVehicleYear": "2022"
+      },
+      "attachedForms": {
+        "attachedColumn3a": true
+      }
+    },
+    "listOfSecurities": {
+      "securityEntry": [
+        {
+          "detailedDescription": "Bankkonto Privatkonto - UBS",
+          "securitiesNumber": "CH93 0076 2011 6238 5295 7",
+          "countryOfDepositaryBank": "CH",
+          "taxValueEndOfYear": {
+            "cantonalTax": 50000,
+            "federalTax": 50000
+          },
+          "grossRevenueA": {
+            "cantonalTax": 1200,
+            "federalTax": 1200
+          }
+        },
+        {
+          "detailedDescription": "Aktie Nestlé SA",
+          "securitiesNumber": "12345678",
+          "faceValueQuantity": 100,
+          "countryOfDepositaryBank": "CH",
+          "taxValueEndOfYear": {
+            "cantonalTax": 30000,
+            "federalTax": 30000
+          },
+          "grossRevenueA": {
+            "cantonalTax": 1500,
+            "federalTax": 1500
+          }
+        }
+      ],
+      "totalTaxValue": {
+        "cantonalTax": 85000,
+        "federalTax": 85000
+      },
+      "totalGrossRevenue": {
+        "cantonalTax": 2700,
+        "federalTax": 2700
+      },
+      "withholdingTax": 945
+    },
+    "listOfLiabilities": {
+      "privateLiabilities": [
+        {
+          "creditor": "UBS Hypotheken",
+          "creditorAddress": "Bahnhofstrasse 45, 8001 Zürich",
+          "interestRate": 2.5,
+          "liabilityAmount": 400000,
+          "interestAmount": 10000
+        }
+      ],
+      "totalPrivateLiabilities": 400000,
+      "totalPrivateLiabilitiesInterest": 10000,
+      "totalAmountLiabilities": 400000,
+      "totalAmountLiabilitiesInterest": 10000
+    },
+    "jobExpenses": {
+      "jobExpensePartner1": {
+        "ticketCostPublicTransport": {
+          "cantonalTax": 1200,
+          "federalTax": 1200
+        },
+        "bicycleOrSmallMotorbike": {
+          "cantonalTax": 700,
+          "federalTax": 700
+        },
+        "subtotalVehicle": {
+          "cantonalTax": 1900,
+          "federalTax": 1900
+        },
+        "remainingJobCostFlatrate": {
+          "cantonalTax": 3600,
+          "federalTax": 3600
+        },
+        "totalAmountJobExpenses": {
+          "cantonalTax": 5500,
+          "federalTax": 5500
+        }
+      }
+    },
+    "insurancePremiums": {
+      "privateHealthInsurance": 3500,
+      "interestSavings": 1200,
+      "subtotalAmount": 4700,
+      "deductionsPremiumsReduction": 2900,
+      "paidInsuranceAndInterest": 4700,
+      "finalDeduction": {
+        "cantonalTax": 2900,
+        "federalTax": 1800
+      }
+    }
+  }
+}

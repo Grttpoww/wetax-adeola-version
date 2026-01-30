@@ -1,0 +1,95 @@
+{
+  "@minorVersion": 0,
+  "header": {
+    "taxPeriod": "2024",
+    "source": 0,
+    "canton": "ZH",
+    "transactionDate": "2026-01-30T10:41:57.145Z",
+    "sourceDescription": "WETAX Mobile App",
+    "periodFrom": "2024-01-01",
+    "periodTo": "2024-12-31",
+    "transactionNumber": "WETAX-2024-697c8af51bd994a6dbc7a04b",
+    "cantonExtension": {
+      "canton": "ZH"
+    }
+  },
+  "content": {
+    "mainForm": {
+      "personDataPartner1": {
+        "partnerPersonIdentification": {
+          "officialName": "User",
+          "firstName": "Test",
+          "vn": "756.1234.5678.97",
+          "dateOfBirth": "2001-01-21"
+        },
+        "addressInformation": {
+          "street": "Teststrasse",
+          "houseNumber": "42",
+          "town": "Zürich",
+          "swissZipCode": "8001",
+          "country": "CH"
+        },
+        "maritalStatusTax": 1,
+        "religion": 2,
+        "employer": "Test AG",
+        "placeOfWork": "Zürich",
+        "phoneNumberPrivate": {
+          "phoneNumber": "+41 79 123 45 67"
+        },
+        "taxMunicipality": {
+          "municipalityId": 261,
+          "cantonAbbreviation": "ZH"
+        }
+      },
+      "revenue": {
+        "employedMainRevenue": {
+          "partner1Amount": 15000
+        },
+        "totalAmountRevenue": {
+          "cantonalTax": 15000,
+          "federalTax": 15000
+        }
+      },
+      "deduction": {
+        "jobExpensesPartner1": {
+          "cantonalTax": 2000,
+          "federalTax": 2000
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 2000,
+          "federalTax": 2000
+        }
+      },
+      "revenueCalculation": {
+        "totalAmountRevenue": {
+          "cantonalTax": 15000,
+          "federalTax": 15000
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 2000,
+          "federalTax": 2000
+        },
+        "netIncome": {
+          "cantonalTax": 13000,
+          "federalTax": 13000
+        },
+        "adjustedNetIncome": {
+          "cantonalTax": 13000,
+          "federalTax": 13000
+        },
+        "totalAmountFiscalRevenue": {
+          "cantonalTax": 13000,
+          "federalTax": 13000
+        }
+      },
+      "asset": {
+        "totalAmountAssets": {
+          "fiscalValue": 0
+        },
+        "totalAmountFiscalAssets": {
+          "fiscalValue": 0
+        }
+      }
+    }
+  }
+}

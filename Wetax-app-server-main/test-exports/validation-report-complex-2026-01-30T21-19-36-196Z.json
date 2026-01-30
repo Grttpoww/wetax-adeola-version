@@ -1,0 +1,19 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "code": "TOTALS_REVENUE_CANTONAL_INCONSISTENT",
+      "message": "Revenue Total Kantonal: erwartet 155900, tatsächlich 152260",
+      "severity": "error",
+      "field": "revenue.totalAmountRevenue.cantonalTax"
+    },
+    {
+      "code": "TOTALS_REVENUE_FEDERAL_INCONSISTENT",
+      "message": "Revenue Total Bundessteuer: erwartet 155900, tatsächlich 152260",
+      "severity": "error",
+      "field": "revenue.totalAmountRevenue.federalTax"
+    }
+  ],
+  "errorCount": 2,
+  "warningCount": 0
+}

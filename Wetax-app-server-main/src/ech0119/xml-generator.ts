@@ -21,7 +21,18 @@ import {
   PrivateBusinessType,
   AddressType,
   SwissMunicipalityType,
+  ListOfSecuritiesType,
+  SecurityEntryType,
+  JobExpensesFormType,
+  JobExpensesType,
+  InsurancePremiumsType,
+  ListOfLiabilitiesType,
+  LiabilitiesListingType,
+  ListOfPropertiesType,
+  PropertyType,
+  AttachedFormsType,
 } from './types'
+import { formatMoneyType2 } from './validator'
 
 /**
  * Generates XML string from eCH-0119 message structure
@@ -88,16 +99,89 @@ function buildHeader(parent: any, header: ECH0119Header): void {
   if (header.transactionNumber) {
     headerEl.ele('transactionNumber').txt(header.transactionNumber)
   }
+  
+  // Canton Extension (ZH-spezifische Erweiterungen wie documentList)
+  if (header.cantonExtension) {
+    buildCantonExtension(headerEl, header.cantonExtension)
+  }
+}
+
+/**
+ * Builds canton extension element (ZH-spezifische Erweiterungen)
+ */
+function buildCantonExtension(parent: any, extension: any): void {
+  const extensionEl = parent.ele('cantonExtension')
+  
+  // Canton code
+  if (extension.canton) {
+    extensionEl.ele('canton').txt(extension.canton)
+  }
+  
+  // Document List (ZH-spezifisch)
+  if (extension.documentList && Array.isArray(extension.documentList)) {
+    extension.documentList.forEach((doc: any) => {
+      const docEl = extensionEl.ele('documentList')
+      
+      if (doc.documentIdentification) {
+        const docIdEl = docEl.ele('documentIdentification')
+        if (doc.documentIdentification.documentCanton) {
+          docIdEl.ele('documentCanton').txt(doc.documentIdentification.documentCanton)
+        }
+        if (doc.documentIdentification.documentType) {
+          docIdEl.ele('documentType').txt(doc.documentIdentification.documentType)
+        }
+      }
+      
+      if (doc.attachmentFile && Array.isArray(doc.attachmentFile)) {
+        doc.attachmentFile.forEach((file: any) => {
+          const fileEl = docEl.ele('attachmentFile')
+          if (file.pathFileName) {
+            fileEl.ele('pathFileName').txt(file.pathFileName)
+          }
+          if (file.internalSortOrder !== undefined) {
+            fileEl.ele('internalSortOrder').txt(file.internalSortOrder.toString())
+          }
+        })
+      }
+    })
+  }
 }
 
 /**
  * Builds content element
+ * Reihenfolge gemäss XSD: mainForm, listOfSecurities, listOfLiabilities, qualifiedInvestments, jobExpenses, insurancePremiums, etc.
  */
 function buildContent(parent: any, content: ContentType): void {
   const contentEl = parent.ele('content')
   
+  // 1. mainForm (zuerst)
   if (content.mainForm) {
     buildMainForm(contentEl, content.mainForm)
+  }
+  
+  // 2. listOfSecurities (wenn vorhanden)
+  if (content.listOfSecurities) {
+    buildListOfSecurities(contentEl, content.listOfSecurities)
+  }
+  
+  // 3. listOfLiabilities (Schulden)
+  if (content.listOfLiabilities) {
+    buildListOfLiabilities(contentEl, content.listOfLiabilities)
+  }
+  
+  // 4. listOfProperties (Liegenschaftenverzeichnis)
+  if (content.listOfProperties) {
+    buildListOfProperties(contentEl, content.listOfProperties)
+  }
+  
+  // 5. jobExpenses (Berufsauslagen mit Zwischenwerten)
+  if (content.jobExpenses) {
+    buildJobExpenses(contentEl, content.jobExpenses)
+  }
+  
+  // 6. insurancePremiums (Versicherungsprämien mit Zwischenwerten)
+  if (content.insurancePremiums) {
+    buildInsurancePremiums(contentEl, content.insurancePremiums)
   }
 }
 
@@ -128,6 +212,34 @@ function buildMainForm(parent: any, mainForm: MainFormType): void {
   // Asset
   if (mainForm.asset) {
     buildAsset(mainFormEl, mainForm.asset)
+  }
+  
+  // Attached Forms (z.B. attachedColumn3a für 3a-Beleg)
+  if (mainForm.attachedForms) {
+    buildAttachedForms(mainFormEl, mainForm.attachedForms)
+  }
+}
+
+/**
+ * Builds attached forms element
+ */
+function buildAttachedForms(parent: any, attachedForms: AttachedFormsType): void {
+  const attachedFormsEl = parent.ele('attachedForms')
+  
+  if (attachedForms.attachedColumn3a !== undefined) {
+    attachedFormsEl.ele('attachedColumn3a').txt(attachedForms.attachedColumn3a.toString())
+  }
+  
+  if (attachedForms.attachedWageStatement !== undefined) {
+    attachedFormsEl.ele('attachedWageStatement').txt(attachedForms.attachedWageStatement.toString())
+  }
+  
+  if (attachedForms.attachedListOfAssets !== undefined) {
+    attachedFormsEl.ele('attachedListOfAssets').txt(attachedForms.attachedListOfAssets.toString())
+  }
+  
+  if (attachedForms.attachedExpenses !== undefined) {
+    attachedFormsEl.ele('attachedExpenses').txt(attachedForms.attachedExpenses.toString())
   }
 }
 
@@ -273,6 +385,26 @@ function buildRevenue(parent: any, revenue: RevenueType): void {
     buildTaxAmount(revenueEl, revenue.securitiesRevenue, 'securitiesRevenue')
   }
   
+  // Property Notional Rental Value (Eigenmietwert) - BRUTTO
+  if (revenue.propertyNotionalRentalValue !== undefined) {
+    revenueEl.ele('propertyNotionalRentalValue').txt(revenue.propertyNotionalRentalValue.toString())
+  }
+  
+  // Property Revenue Gross (Brutto)
+  if (revenue.propertyRevenueGross !== undefined) {
+    revenueEl.ele('propertyRevenueGross').txt(revenue.propertyRevenueGross.toString())
+  }
+  
+  // Property Deduction Flatrate (Pauschalabzug 20%)
+  if (revenue.propertyDeductionFlatrate !== undefined) {
+    revenueEl.ele('propertyDeductionFlatrate').txt(revenue.propertyDeductionFlatrate.toString())
+  }
+  
+  // Property Remaining Revenue (Netto nach Abzug)
+  if (revenue.propertyRemainingRevenue !== undefined) {
+    revenueEl.ele('propertyRemainingRevenue').txt(revenue.propertyRemainingRevenue.toString())
+  }
+  
   // Total Amount Revenue
   if (revenue.totalAmountRevenue) {
     buildTaxAmount(revenueEl, revenue.totalAmountRevenue, 'totalAmountRevenue')
@@ -298,6 +430,11 @@ function buildDeduction(parent: any, deduction: DeductionType): void {
   // Insurance and Interest
   if (deduction.insuranceAndInterest) {
     buildTaxAmount(deductionEl, deduction.insuranceAndInterest, 'insuranceAndInterest')
+  }
+  
+  // Amount Liabilities Interest (Schuldzinsen)
+  if (deduction.amountLiabilitiesInterest) {
+    buildTaxAmount(deductionEl, deduction.amountLiabilitiesInterest, 'amountLiabilitiesInterest')
   }
   
   // Further Deduction: Job-Oriented Further Education Cost
@@ -412,6 +549,11 @@ function buildAsset(parent: any, asset: AssetType): void {
   if (asset.movablePropertyVehicle) {
     buildPrivateBusiness(assetEl, asset.movablePropertyVehicle, 'movablePropertyVehicle')
   }
+  
+  // Property House or Flat (Liegenschaften)
+  if (asset.propertyHouseOrFlat) {
+    buildPrivateBusiness(assetEl, asset.propertyHouseOrFlat, 'propertyHouseOrFlat')
+  }
 
   // Vehicle Details
   if (asset.moveablePropertyVehicleDescription) {
@@ -434,6 +576,90 @@ function buildAsset(parent: any, asset: AssetType): void {
   // Total Amount Fiscal Assets
   if (asset.totalAmountFiscalAssets) {
     buildPrivateBusiness(assetEl, asset.totalAmountFiscalAssets, 'totalAmountFiscalAssets')
+  }
+}
+
+/**
+ * Builds list of securities element
+ */
+function buildListOfSecurities(parent: any, listOfSecurities: ListOfSecuritiesType): void {
+  const listEl = parent.ele('listOfSecurities')
+  
+  // Bank Account
+  if (listOfSecurities.bankAccount) {
+    const bankEl = listEl.ele('bankAccount')
+    if (listOfSecurities.bankAccount.ibanNumber) {
+      bankEl.ele('ibanNumber').txt(listOfSecurities.bankAccount.ibanNumber)
+    }
+    if (listOfSecurities.bankAccount.bankAccountNumber) {
+      bankEl.ele('bankAccountNumber').txt(listOfSecurities.bankAccount.bankAccountNumber)
+    }
+    if (listOfSecurities.bankAccount.bankName) {
+      bankEl.ele('bankName').txt(listOfSecurities.bankAccount.bankName)
+    }
+    if (listOfSecurities.bankAccount.accountOwner) {
+      bankEl.ele('accountOwner').txt(listOfSecurities.bankAccount.accountOwner)
+    }
+  }
+  
+  // Security Entries
+  if (listOfSecurities.securityEntry && listOfSecurities.securityEntry.length > 0) {
+    listOfSecurities.securityEntry.forEach((entry) => {
+      buildSecurityEntry(listEl, entry)
+    })
+  }
+  
+  // Total Tax Value
+  if (listOfSecurities.totalTaxValue) {
+    buildTaxAmount(listEl, listOfSecurities.totalTaxValue, 'totalTaxValue')
+  }
+  
+  // Total Gross Revenue
+  if (listOfSecurities.totalGrossRevenue) {
+    buildTaxAmount(listEl, listOfSecurities.totalGrossRevenue, 'totalGrossRevenue')
+  }
+  
+  // Withholding Tax (Verrechnungssteuer) - moneyType2 (Decimal)
+  if (listOfSecurities.withholdingTax !== undefined) {
+    const withholdingTaxFormatted = formatMoneyType2(listOfSecurities.withholdingTax)
+    if (withholdingTaxFormatted !== undefined) {
+      listEl.ele('withholdingTax').txt(withholdingTaxFormatted.toString())
+    }
+  }
+}
+
+/**
+ * Builds security entry element
+ */
+function buildSecurityEntry(parent: any, entry: SecurityEntryType): void {
+  const entryEl = parent.ele('securityEntry')
+  
+  if (entry.code) {
+    entryEl.ele('code').txt(entry.code)
+  }
+  if (entry.originalCurrency) {
+    entryEl.ele('originalCurrency').txt(entry.originalCurrency)
+  }
+  if (entry.faceValueQuantity !== undefined) {
+    entryEl.ele('faceValueQuantity').txt(entry.faceValueQuantity.toString())
+  }
+  if (entry.securitiesNumber) {
+    entryEl.ele('securitiesNumber').txt(entry.securitiesNumber)
+  }
+  if (entry.detailedDescription) {
+    entryEl.ele('detailedDescription').txt(entry.detailedDescription)
+  }
+  if (entry.countryOfDepositaryBank) {
+    entryEl.ele('countryOfDepositaryBank').txt(entry.countryOfDepositaryBank)
+  }
+  if (entry.taxValueEndOfYear) {
+    buildTaxAmount(entryEl, entry.taxValueEndOfYear, 'taxValueEndOfYear')
+  }
+  if (entry.grossRevenueA) {
+    buildTaxAmount(entryEl, entry.grossRevenueA, 'grossRevenueA')
+  }
+  if (entry.grossRevenueB) {
+    buildTaxAmount(entryEl, entry.grossRevenueB, 'grossRevenueB')
   }
 }
 
@@ -479,6 +705,280 @@ function buildPrivateBusiness(parent: any, business: PrivateBusinessType, elemen
   
   if (business.businessPortion !== undefined) {
     businessEl.ele('businessPortion').txt(business.businessPortion.toString())
+  }
+}
+
+/**
+ * Builds job expenses element with intermediate values
+ */
+function buildJobExpenses(parent: any, jobExpenses: JobExpensesFormType): void {
+  const jobExpensesEl = parent.ele('jobExpenses')
+  
+  if (jobExpenses.jobExpensePartner1) {
+    buildJobExpenseType(jobExpensesEl, jobExpenses.jobExpensePartner1, 'jobExpensePartner1')
+  }
+  
+  if (jobExpenses.jobExpensePartner2) {
+    buildJobExpenseType(jobExpensesEl, jobExpenses.jobExpensePartner2, 'jobExpensePartner2')
+  }
+}
+
+/**
+ * Builds job expense type element
+ */
+function buildJobExpenseType(parent: any, jobExpense: JobExpensesType, elementName: string): void {
+  const jobExpenseEl = parent.ele(elementName)
+  
+  // Fahrtkosten: ÖV
+  if (jobExpense.ticketCostPublicTransport) {
+    buildTaxAmount(jobExpenseEl, jobExpense.ticketCostPublicTransport, 'ticketCostPublicTransport')
+  }
+  
+  // Fahrtkosten: Velo
+  if (jobExpense.bicycleOrSmallMotorbike) {
+    buildTaxAmount(jobExpenseEl, jobExpense.bicycleOrSmallMotorbike, 'bicycleOrSmallMotorbike')
+  }
+  
+  // Fahrtkosten: Total (subtotalVehicle)
+  if (jobExpense.subtotalVehicle) {
+    buildTaxAmount(jobExpenseEl, jobExpense.subtotalVehicle, 'subtotalVehicle')
+  }
+  
+  // Verpflegung: Nicht verbilligt
+  if (jobExpense.cateringNonSubsidized) {
+    buildTaxAmount(jobExpenseEl, jobExpense.cateringNonSubsidized, 'cateringNonSubsidized')
+  }
+  
+  // Verpflegung: Verbilligt
+  if (jobExpense.cateringSubsidized) {
+    buildTaxAmount(jobExpenseEl, jobExpense.cateringSubsidized, 'cateringSubsidized')
+  }
+  
+  // Verpflegung: Schichtarbeit
+  if (jobExpense.cateringShiftWork) {
+    buildTaxAmount(jobExpenseEl, jobExpense.cateringShiftWork, 'cateringShiftWork')
+  }
+  
+  // Übrige Berufskosten (3% Pauschale)
+  if (jobExpense.remainingJobCostFlatrate) {
+    buildTaxAmount(jobExpenseEl, jobExpense.remainingJobCostFlatrate, 'remainingJobCostFlatrate')
+  }
+  
+  // Total Berufsauslagen
+  if (jobExpense.totalAmountJobExpenses) {
+    buildTaxAmount(jobExpenseEl, jobExpense.totalAmountJobExpenses, 'totalAmountJobExpenses')
+  }
+}
+
+/**
+ * Builds insurance premiums element with intermediate values
+ */
+function buildInsurancePremiums(parent: any, insurance: InsurancePremiumsType): void {
+  const insuranceEl = parent.ele('insurancePremiums')
+  
+  // Private Krankenversicherungsprämien
+  if (insurance.privateHealthInsurance !== undefined) {
+    insuranceEl.ele('privateHealthInsurance').txt(insurance.privateHealthInsurance.toString())
+  }
+  
+  // Private Unfallversicherung
+  if (insurance.privateAccidentInsurance !== undefined) {
+    insuranceEl.ele('privateAccidentInsurance').txt(insurance.privateAccidentInsurance.toString())
+  }
+  
+  // Zinsen von Sparkapitalien
+  if (insurance.interestSavings !== undefined) {
+    insuranceEl.ele('interestSavings').txt(insurance.interestSavings.toString())
+  }
+  
+  // Zwischentotal
+  if (insurance.subtotalAmount !== undefined) {
+    insuranceEl.ele('subtotalAmount').txt(insurance.subtotalAmount.toString())
+  }
+  
+  // Maximaler Abzug (B)
+  if (insurance.deductionsPremiumsReduction !== undefined) {
+    insuranceEl.ele('deductionsPremiumsReduction').txt(insurance.deductionsPremiumsReduction.toString())
+  }
+  
+  // Total bezahlte Versicherungsprämien und Zinsen (A)
+  if (insurance.paidInsuranceAndInterest !== undefined) {
+    insuranceEl.ele('paidInsuranceAndInterest').txt(insurance.paidInsuranceAndInterest.toString())
+  }
+  
+  // Finaler Abzug (C = niedrigerer von A und B)
+  if (insurance.finalDeduction) {
+    buildTaxAmount(insuranceEl, insurance.finalDeduction, 'finalDeduction')
+  }
+}
+
+/**
+ * Builds list of properties element (Liegenschaftenverzeichnis)
+ */
+function buildListOfProperties(parent: any, properties: ListOfPropertiesType): void {
+  const propertiesEl = parent.ele('listOfProperties')
+  
+  // Individual properties
+  if (properties.property && properties.property.length > 0) {
+    for (const prop of properties.property) {
+      const propEl = propertiesEl.ele('property')
+      
+      // Property Identification
+      if (prop.propertyIdentification) {
+        const identEl = propEl.ele('propertyIdentification')
+        if (prop.propertyIdentification.street) {
+          identEl.ele('street').txt(prop.propertyIdentification.street)
+        }
+        if (prop.propertyIdentification.houseNumber) {
+          identEl.ele('houseNumber').txt(prop.propertyIdentification.houseNumber)
+        }
+        if (prop.propertyIdentification.town) {
+          identEl.ele('town').txt(prop.propertyIdentification.town)
+        }
+        if (prop.propertyIdentification.swissZipCode) {
+          identEl.ele('swissZipCode').txt(prop.propertyIdentification.swissZipCode.toString())
+        }
+        if (prop.propertyIdentification.canton) {
+          identEl.ele('canton').txt(prop.propertyIdentification.canton)
+        }
+      }
+      
+      // Property Type
+      if (prop.propertyType) {
+        propEl.ele('propertyType').txt(prop.propertyType)
+      }
+      
+      // Property Area
+      if (prop.propertyArea !== undefined) {
+        propEl.ele('propertyArea').txt(prop.propertyArea.toString())
+      }
+      
+      // Property Land Area
+      if (prop.propertyLandArea !== undefined) {
+        propEl.ele('propertyLandArea').txt(prop.propertyLandArea.toString())
+      }
+      
+      // Ownership Share
+      if (prop.ownershipShare !== undefined) {
+        propEl.ele('ownershipShare').txt(prop.ownershipShare.toString())
+      }
+      
+      // Notional Rental Value (BRUTTO)
+      if (prop.notionalRentalValue !== undefined) {
+        propEl.ele('notionalRentalValue').txt(prop.notionalRentalValue.toString())
+      }
+      
+      // Gross Revenue (BRUTTO)
+      if (prop.grossRevenue !== undefined) {
+        propEl.ele('grossRevenue').txt(prop.grossRevenue.toString())
+      }
+      
+      // Maintenance Costs (Pauschalabzug)
+      if (prop.maintenanceCosts !== undefined) {
+        propEl.ele('maintenanceCosts').txt(prop.maintenanceCosts.toString())
+      }
+      
+      // Total Property Costs
+      if (prop.totalPropertyCosts !== undefined) {
+        propEl.ele('totalPropertyCosts').txt(prop.totalPropertyCosts.toString())
+      }
+      
+      // Net Property Revenue (NETTO)
+      if (prop.netPropertyRevenue !== undefined) {
+        propEl.ele('netPropertyRevenue').txt(prop.netPropertyRevenue.toString())
+      }
+      
+      // Tax Value
+      if (prop.taxValue !== undefined) {
+        propEl.ele('taxValue').txt(prop.taxValue.toString())
+      }
+      
+      // Market Value (optional)
+      if (prop.marketValue !== undefined) {
+        propEl.ele('marketValue').txt(prop.marketValue.toString())
+      }
+    }
+  }
+  
+  // Totals
+  if (properties.totalNotionalRentalValue !== undefined) {
+    propertiesEl.ele('totalNotionalRentalValue').txt(properties.totalNotionalRentalValue.toString())
+  }
+  if (properties.totalMaintenanceCosts !== undefined) {
+    propertiesEl.ele('totalMaintenanceCosts').txt(properties.totalMaintenanceCosts.toString())
+  }
+  if (properties.totalMortgageInterest !== undefined) {
+    propertiesEl.ele('totalMortgageInterest').txt(properties.totalMortgageInterest.toString())
+  }
+  if (properties.totalPropertyCosts !== undefined) {
+    propertiesEl.ele('totalPropertyCosts').txt(properties.totalPropertyCosts.toString())
+  }
+  if (properties.totalNetPropertyRevenue !== undefined) {
+    propertiesEl.ele('totalNetPropertyRevenue').txt(properties.totalNetPropertyRevenue.toString())
+  }
+  if (properties.totalTaxValue !== undefined) {
+    propertiesEl.ele('totalTaxValue').txt(properties.totalTaxValue.toString())
+  }
+}
+
+/**
+ * Builds list of liabilities element
+ */
+function buildListOfLiabilities(parent: any, liabilities: ListOfLiabilitiesType): void {
+  const liabilitiesEl = parent.ele('listOfLiabilities')
+  
+  // Private Liabilities
+  if (liabilities.privateLiabilities && liabilities.privateLiabilities.length > 0) {
+    liabilities.privateLiabilities.forEach((liability) => {
+      buildLiabilitiesListing(liabilitiesEl, liability, 'privateLiabilities')
+    })
+  }
+  
+  // Total Private Liabilities
+  if (liabilities.totalPrivateLiabilities !== undefined) {
+    liabilitiesEl.ele('totalPrivateLiabilities').txt(liabilities.totalPrivateLiabilities.toString())
+  }
+  
+  // Total Private Liabilities Interest
+  if (liabilities.totalPrivateLiabilitiesInterest !== undefined) {
+    liabilitiesEl.ele('totalPrivateLiabilitiesInterest').txt(liabilities.totalPrivateLiabilitiesInterest.toString())
+  }
+  
+  // Total Amount Liabilities
+  if (liabilities.totalAmountLiabilities !== undefined) {
+    liabilitiesEl.ele('totalAmountLiabilities').txt(liabilities.totalAmountLiabilities.toString())
+  }
+  
+  // Total Amount Liabilities Interest
+  if (liabilities.totalAmountLiabilitiesInterest !== undefined) {
+    liabilitiesEl.ele('totalAmountLiabilitiesInterest').txt(liabilities.totalAmountLiabilitiesInterest.toString())
+  }
+}
+
+/**
+ * Builds liabilities listing element
+ */
+function buildLiabilitiesListing(parent: any, liability: LiabilitiesListingType, elementName: string): void {
+  const liabilityEl = parent.ele(elementName)
+  
+  if (liability.creditor) {
+    liabilityEl.ele('creditor').txt(liability.creditor)
+  }
+  
+  if (liability.creditorAddress) {
+    liabilityEl.ele('creditorAddress').txt(liability.creditorAddress)
+  }
+  
+  if (liability.interestRate !== undefined) {
+    liabilityEl.ele('interestRate').txt(liability.interestRate.toString())
+  }
+  
+  if (liability.liabilityAmount !== undefined) {
+    liabilityEl.ele('liabilityAmount').txt(liability.liabilityAmount.toString())
+  }
+  
+  if (liability.interestAmount !== undefined) {
+    liabilityEl.ele('interestAmount').txt(liability.interestAmount.toString())
   }
 }
 

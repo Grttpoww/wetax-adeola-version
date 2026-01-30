@@ -2,9 +2,38 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Zivilstand } from './Zivilstand';
 export type TaxReturnData = {
+    unterhaltsbeitraege: {
+        data: {
+            rentenleistungen: Array<{
+                abzugsfaehigerErtragsanteil?: number;
+                berechnungssatz?: number;
+                gesamtbetrag?: number;
+                bezeichnung?: string;
+            }>;
+            fuerKinder: Array<{
+                monat18Jahre?: string;
+                betrag?: number;
+                geburtsdatum?: string;
+                kindName?: string;
+            }>;
+            anEhegatten?: number;
+        };
+        finished?: boolean;
+        start?: boolean;
+    };
     liegenschaften: {
-        data: any;
+        data: Array<{
+            vermoegenssteuerwert?: number;
+            istGeschaeftlich?: boolean;
+            unterhaltBetrag?: number;
+            unterhaltArt?: 'pauschal' | 'effektiv';
+            eigenmietwertOderMietertrag?: number;
+            kanton?: string;
+            ort?: string;
+            bezeichnung?: string;
+        }>;
         finished?: boolean;
         start?: boolean;
     };
@@ -31,6 +60,9 @@ export type TaxReturnData = {
     };
     aktien: {
         data: Array<{
+            istQualifizierteBeteiligung?: boolean;
+            beteiligungsquote?: number;
+            dividendenertrag?: number;
             steuerwertProStueck?: number;
             stueckzahl?: number;
             steuerwertEndeJahr?: number;
@@ -82,6 +114,7 @@ export type TaxReturnData = {
     };
     privateUnfall: {
         data: {
+            partner2Betrag?: number;
             betrag?: number;
         };
         finished?: boolean;
@@ -89,6 +122,7 @@ export type TaxReturnData = {
     };
     versicherungspraemie: {
         data: {
+            partner2Betrag?: number;
             betrag?: number;
         };
         finished?: boolean;
@@ -96,6 +130,7 @@ export type TaxReturnData = {
     };
     saeule3a: {
         data: {
+            partner2Betrag?: number;
             betrag?: number;
         };
         finished?: boolean;
@@ -103,6 +138,7 @@ export type TaxReturnData = {
     };
     ahvIVsaeule2Selber: {
         data: {
+            partner2Betrag?: number;
             betrag?: number;
         };
         finished?: boolean;
@@ -110,6 +146,8 @@ export type TaxReturnData = {
     };
     saeule2: {
         data: {
+            partner2EinkaufBetrag?: number;
+            partner2OrdentlichBetrag?: number;
             einkaufBetrag?: number;
             ordentlichBetrag?: number;
         };
@@ -125,6 +163,7 @@ export type TaxReturnData = {
     };
     inAusbildung: {
         data: Array<{
+            person?: 1 | 2;
             betrag?: number;
             bezeichung?: string;
         }>;
@@ -142,6 +181,8 @@ export type TaxReturnData = {
     };
     schichtarbeit: {
         data: {
+            partner2ImmerSchichtarbeit?: boolean;
+            partner2WieVieleTageImJahr?: number;
             immerSchichtarbeit?: boolean;
             wieVieleTageImJahr?: number;
         };
@@ -155,6 +196,7 @@ export type TaxReturnData = {
     };
     verpflegungAufArbeit: {
         data: {
+            partner2AnzahlTage?: number;
             anzahlTage?: number;
         };
         finished?: boolean;
@@ -173,6 +215,11 @@ export type TaxReturnData = {
     };
     autoMotorradArbeit: {
         data: {
+            partner2GeleastesFahrzeug?: boolean;
+            partner2KeinOevWeilKrankOderGebrechlich?: boolean;
+            partner2StaendigeBenutzungArbeitszeit?: boolean;
+            partner2ZeitersparnisUeber1h?: boolean;
+            partner2FehlenVonOev?: boolean;
             geleastesFahrzeug?: boolean;
             keinOevWeilKrankOderGebrechlich?: boolean;
             staendigeBenutzungArbeitszeit?: boolean;
@@ -183,12 +230,15 @@ export type TaxReturnData = {
         start?: boolean;
     };
     veloArbeit: {
-        data: any;
+        data: {
+            partner2VeloArbeit?: boolean;
+        };
         finished?: boolean;
         start?: boolean;
     };
     oevArbeit: {
         data: {
+            partner2Kosten?: number;
             kosten?: number;
         };
         finished?: boolean;
@@ -196,6 +246,7 @@ export type TaxReturnData = {
     };
     geldVerdient: {
         data: Array<{
+            person?: 1 | 2;
             anzahlarbeitstage?: number;
             uploadedLohnausweis?: boolean;
             nettolohn?: number;
@@ -208,28 +259,69 @@ export type TaxReturnData = {
         finished?: boolean;
         start?: boolean;
     };
+    schuldzinsen: {
+        data: {
+            betrag?: number;
+        };
+        finished?: boolean;
+        start?: boolean;
+    };
     verschuldet: {
-        data: any;
+        data: Array<{
+            zinsenImJahr?: number;
+            schuldhoehe?: number;
+            zinssatz?: number;
+            glauebigerAdresse?: string;
+            glauebiger?: string;
+        }>;
         finished?: boolean;
         start?: boolean;
     };
     geschaeftsOderKorporationsanteile: {
-        data: any;
+        data: Array<{
+            steuerbarerAnteilBund?: number;
+            steuerbarerAnteilStaat?: number;
+            bruttoertrag?: number;
+            istQualifizierteBeteiligung?: boolean;
+            ertrag?: number;
+            beteiligungsquote?: number;
+            bezeichnung?: string;
+        }>;
         finished?: boolean;
         start?: boolean;
     };
     lebensOderRentenversicherung: {
-        data: any;
+        data: Array<{
+            leibrenteBerechnungssatz?: number;
+            steuerbarerBetrag?: number;
+            steuerbarerAnteilProzent?: number;
+            gesamtbetrag?: number;
+            art?: 'lebensversicherung' | 'rentenversicherung' | 'leibrente';
+        }>;
         finished?: boolean;
         start?: boolean;
     };
     erwerbsausfallentschaedigung: {
-        data: any;
+        data: Array<{
+            bis?: string;
+            von?: string;
+            betrag?: number;
+            art?: 'arbeitslosigkeit' | 'krankheit' | 'unfall' | 'militar' | 'mutterschaft' | 'sonstige';
+        }>;
         finished?: boolean;
         start?: boolean;
     };
     einkuenfteSozialversicherung: {
-        data: any;
+        data: Array<{
+            leibrenteBerechnungssatz?: number;
+            vorsorgeverhaeltnisBereits1985?: boolean;
+            eigenbeitraegeProzent?: number;
+            rentenbeginn?: string;
+            steuerbarerBetrag?: number;
+            steuerbarerAnteilProzent?: number;
+            gesamtbetrag?: number;
+            art?: 'ahvIvRente' | 'pensionskasse' | 'arbeitgeberRente' | 'suva' | 'militarversicherung' | 'saeule3a' | 'leibrente' | 'sonstige';
+        }>;
         finished?: boolean;
         start?: boolean;
     };
@@ -286,11 +378,19 @@ export type TaxReturnData = {
     };
     personData: {
         data: {
+            partner2Konfession?: string;
+            partner2Beruf?: string;
+            partner2AhvNummer?: string;
+            partner2Geburtsdatum?: string;
+            partner2Nachname?: string;
+            partner2Vorname?: string;
+            ahvNummer?: string;
             gemeindeBfsNumber?: number;
             email?: string;
             beruf?: string;
             konfession?: string;
-            zivilstand?: string;
+            zivilstand?: Zivilstand;
+            taxMunicipality?: string;
             land?: string;
             stadt?: string;
             plz?: number;

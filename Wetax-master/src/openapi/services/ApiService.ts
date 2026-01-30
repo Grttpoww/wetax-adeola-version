@@ -270,14 +270,12 @@ export class ApiService {
     }
     /**
      * @param taxReturnId
-     * @returns any Ok
+     * @returns string
      * @throws ApiError
      */
     public static exportEch0119(
         taxReturnId: string,
-    ): CancelablePromise<{
-        xml: string;
-    }> {
+    ): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/v1/tax-return/{taxReturnId}/export-ech0119',

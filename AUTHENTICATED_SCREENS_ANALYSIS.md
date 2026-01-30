@@ -385,6 +385,78 @@ export const ArrayOverviewTemplate = <T extends TaxReturnDataKey, U extends {}>(
 
 ---
 
+### Pattern 5: Real Estate / Liegenschaften (neuer Flow)
+
+- **Backend-Datenstruktur** (`TaxReturnData.liegenschaften.data[]`):
+  - `bezeichnung: string | undefined`
+  - `ort: string | undefined`
+  - `kanton: string | undefined`
+  - `eigenmietwertOderMietertrag: number | undefined`
+  - `unterhaltArt: 'pauschal' | 'effektiv' | undefined`
+  - `unterhaltBetrag: number | undefined`
+  - `istGeschaeftlich: boolean | undefined`
+  - `vermoegenssteuerwert: number | undefined`
+- **Screens** (`screens.ts`):
+  - `liegenschaftenYesNoScreen`: `ScreenTypeEnum.YesNo`, Gate-Screen (setzt `liegenschaften.start`)
+  - `liegenschaftenOverview`: `ScreenTypeEnum.ArrayOverview`, Liste aller Liegenschaften
+  - `liegenschaftenDetail`: `ScreenTypeEnum.ArrayForm`, Detailerfassung pro Liegenschaft
+- **Kategorie & Subkategorie** (`constants.tsx`, `enums.ts`):
+  - `ScreenCategoryEnum.Vermoegen`
+  - `ScreenSubcategoryEnum.SubLiegenschaften`
+  - Mapping in `mapScreenEnumToCategory`, `mapScreenEnumToSubcategory`, `mapSubcategoryToLabel`
+- **Berechnungen** (`computer.ts`):
+  - Nettoertrag:
+    - `nettoertragLiegenschaften = Σ (eigenmietwertOderMietertrag - Unterhalt)`
+    - Unterhalt:
+      - Wenn `unterhaltArt === 'pauschal'` und **nicht** `istGeschaeftlich`: `0.2 * bruttoErtrag`
+      - Wenn `unterhaltArt === 'effektiv'`: `unterhaltBetrag`
+  - Vermögenswerte:
+    - `totalSteuerwertLiegenschaften = Σ vermoegenssteuerwert`
+    - `totalVermoegenswerte += totalSteuerwertLiegenschaften`
+  - Einkommen:
+    - `totalEinkuenfte = Einkünfte Lohn + nettoertragLiegenschaften`
+- **Computed-Felder** (`ComputedTaxReturnT`):
+  - `nettoertragLiegenschaften: number`
+  - `totalSteuerwertLiegenschaften: number`
+
+Damit ist der Immobilien-Case end-to-end eingebunden (Input-Screens → TaxReturnData → `computeTaxReturn` → Vermögens- und Einkommensbasis).
+
+---
+
+### Pattern 6: Schulden / Schuldzinsen (neuer Flow)
+
+- **Backend-Datenstruktur** (`TaxReturnData`):
+  - `verschuldet`: Gate-Flag (Ja/Nein), keine Detaildaten
+  - `schuldzinsen`: Objekt mit
+    - `start: boolean | undefined`
+    - `finished: boolean | undefined`
+    - `data: { betrag: number | undefined }`
+- **Screens** (`screens.ts`):
+  - `verschuldetScreen`: `ScreenTypeEnum.YesNo`, Titel „Schulden“, Eignungsfrage.
+  - `schuldzinsenYesNoScreen`: `ScreenTypeEnum.YesNo`, Kategorie **Abzuege**, Frage „Hast du im Steuerjahr Schuldzinsen bezahlt?“.
+  - `schuldzinsenAmountScreen`: `ScreenTypeEnum.ObjForm`, `dataKey: 'schuldzinsen'`,
+    - Field: `betrag` (CurrencyInput, total bezahlte Schuldzinsen im Steuerjahr),
+    - `hide: (v, data) => v.start !== true || data.verschuldet?.start === false`.
+- **Kategorie & Subkategorie** (`constants.tsx`, `enums.ts`):
+  - Kategorie: `ScreenCategoryEnum.Abzuege`
+  - Subkategorie: `ScreenSubcategoryEnum.SubSchulden` mit Label `Schulden`
+  - Mapping in `mapScreenEnumToCategory`, `mapScreenEnumToSubcategory`, `mapSubcategoryToLabel`.
+- **Berechnung Schuldzinsenabzug** (`computer.ts`, Ziffer 12):
+  - Eingabe:
+    - `schuldzinsenBezahlt = data.schuldzinsen.data.betrag ?? 0`
+  - Bruttoerträge:
+    - `totalBruttoertragAB` = Summe aller Wertschriftenerträge (mit/ohne Verrechnungssteuer)
+    - `bruttoErtragLiegenschaftenTotal = Σ eigenmietwertOderMietertrag` (ohne Unterhalt)
+  - Maximal abzugsfähige Schuldzinsen:
+    - `maxSchuldzinsenAbzug = totalBruttoertragAB + bruttoErtragLiegenschaftenTotal + 50_000`
+  - Effektiver Abzug:
+    - `schuldzinsenAbzug = min(schuldzinsenBezahlt, maxSchuldzinsenAbzug)`
+  - Integration:
+    - `totalAbzuegeStaat` += `schuldzinsenAbzug`
+    - `totalAbzuegeBund` += `schuldzinsenAbzug`
+
+Damit ist der Schulden-/Schuldzinsen-Case end-to-end angebunden (Gate-Frage → Detailbetrag → begrenzter Abzug in `computeTaxReturn`).
+
 ## 3. TAXRETURN CONTEXT
 
 **File:** `Wetax-master/src/context/TaxReturn.context.tsx`

@@ -1,0 +1,31 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "code": "SEMANTIC_MARITAL_STATUS_INCONSISTENT",
+      "message": "maritalStatusTax = 2 (verheiratet) aber kein personDataPartner2",
+      "severity": "warning",
+      "field": "personDataPartner1.maritalStatusTax"
+    },
+    {
+      "code": "TOTALS_DEDUCTION_CANTONAL_INCONSISTENT",
+      "message": "Deduction Total Kantonal: erwartet 17756, tatsächlich 36356",
+      "severity": "error",
+      "field": "deduction.totalAmountDeduction.cantonalTax"
+    },
+    {
+      "code": "TOTALS_NET_INCOME_CANTONAL_INCONSISTENT",
+      "message": "Net Income Kantonal: erwartet 121744, tatsächlich 120544",
+      "severity": "error",
+      "field": "revenueCalculation.netIncome.cantonalTax"
+    },
+    {
+      "code": "TOTALS_ADJUSTED_NET_INCOME_CANTONAL_INCONSISTENT",
+      "message": "Adjusted Net Income Kantonal: erwartet 120044, tatsächlich 110044",
+      "severity": "error",
+      "field": "revenueCalculation.adjustedNetIncome.cantonalTax"
+    }
+  ],
+  "errorCount": 3,
+  "warningCount": 1
+}

@@ -302,10 +302,89 @@ export interface MainFormType {
   deduction?: DeductionType;
   revenueCalculation?: RevenueCalculationType;
   asset?: AssetType;
+  listOfSecurities?: ListOfSecuritiesType;
+  jobExpenses?: JobExpensesFormType;
+  insurancePremiums?: InsurancePremiumsType;
+  listOfLiabilities?: ListOfLiabilitiesType;
   benefit?: BenefitType;
   attachedForms?: AttachedFormsType;
   cantonExtension?: CantonExtensionType;
   lastTaxDeclaration?: SwissMunicipalityType;
+}
+
+// ============================================================================
+// List of Securities Types
+// ============================================================================
+
+export interface ListOfSecuritiesType {
+  bankAccount?: BankAccountType;
+  securityEntry?: SecurityEntryType[];
+  eTaxStatement?: ETaxStatementType[];
+  cantonExtension?: CantonExtensionType;
+  locationAndDate?: string;
+  attachedPCListOfSecurities?: number;
+  attachedForms?: number;
+  attachedFormDA1?: number;
+  attachedClearing?: number;
+  note?: string;
+  carryOverSupplementary1TaxValue?: MoneyType1;
+  carryOverSupplementary1RevenueA?: MoneyType1;
+  carryOverSupplementary1RevenueB?: MoneyType1;
+  carryOverSupplementary2TaxValue?: MoneyType1;
+  carryOverSupplementary2RevenueA?: MoneyType1;
+  carryOverSupplementary2RevenueB?: MoneyType1;
+  carryOverFormDA1TaxValue?: MoneyType1;
+  carryOverFormDA1RevenueB?: MoneyType1;
+  totalQualifiedInvestments?: MoneyType1;
+  totalTaxValue?: TaxAmountType;
+  subtotalGrossRevenueA1?: TaxAmountType;
+  subtotalGrossRevenueB?: TaxAmountType;
+  subtotalGrossRevenueA2?: TaxAmountType;
+  totalGrossRevenue?: TaxAmountType;
+  withholdingTax?: MoneyType2; // Verrechnungssteuer (moneyType2 = Decimal)
+}
+
+export interface BankAccountType {
+  cantonExtension?: CantonExtensionType;
+  ibanNumber?: string;
+  postAccountNumber?: string;
+  bankAccountNumber?: string;
+  bankName?: string;
+  bankClearingNumber?: string;
+  accountOwner?: string;
+}
+
+export interface SecurityEntryType {
+  cantonExtension?: CantonExtensionType;
+  code?: '00' | '01' | '02' | '03' | '04'; // business assets, usufruct, inherited, donation, qualified investment
+  originalCurrency?: string;
+  faceValueQuantity?: number;
+  securitiesNumber?: string;
+  detailedDescription?: string;
+  countryOfDepositaryBank?: string; // ISO-3166 ALPHA-2
+  addition?: string; // gMonthDay
+  divestiture?: string; // gMonthDay
+  taxValueEndOfYear?: TaxAmountType;
+  grossRevenueA?: TaxAmountType; // mit Verrechnungssteuer
+  grossRevenueB?: TaxAmountType; // ohne Verrechnungssteuer
+}
+
+export interface ETaxStatementType {
+  cantonExtension?: CantonExtensionType;
+  mutationJournal?: MutationJournalEntryType[];
+  id: string;
+  taxValueEndOfYear?: TaxAmountType;
+  grossRevenueA?: TaxAmountType;
+  grossRevenueB?: TaxAmountType;
+}
+
+export interface MutationJournalEntryType {
+  cantonExtension?: CantonExtensionType;
+  date?: string; // datePartiallyKnownType
+  description?: string;
+  quantity?: number;
+  price?: MoneyType1;
+  totalValue?: MoneyType1;
 }
 
 export interface RepresentativePersonType {
@@ -411,15 +490,151 @@ export interface UidStructureType {
 export interface ContentType {
   mainForm?: MainFormType;
   listOfSecurities?: any; // Not implemented in Phase 1
-  listOfLiabilities?: any; // Not implemented in Phase 1
+  listOfLiabilities?: ListOfLiabilitiesType;
+  listOfProperties?: ListOfPropertiesType; // Liegenschaftenverzeichnis
   qualifiedInvestmentsPrivate?: any; // Not implemented in Phase 1
   qualifiedInvestmentsBusiness?: any; // Not implemented in Phase 1
-  jobExpenses?: any; // Not implemented in Phase 1
+  jobExpenses?: JobExpensesFormType;
   jobOrientedFurtherEducationCost?: any; // Not implemented in Phase 1
-  insurancePremiums?: any; // Not implemented in Phase 1
+  insurancePremiums?: InsurancePremiumsType;
   diseaseAndAccidentExpenses?: any; // Not implemented in Phase 1
   handicapExpenses?: any; // Not implemented in Phase 1
   cantonExtension?: CantonExtensionType;
+}
+
+// ============================================================================
+// Job Expenses Types
+// ============================================================================
+
+export interface JobExpensesFormType {
+  jobExpensePartner1?: JobExpensesType;
+  jobExpensePartner2?: JobExpensesType;
+  cantonExtension?: CantonExtensionType;
+}
+
+export interface JobExpensesType {
+  ticketCostPublicTransport?: TaxAmountType; // ÖV-Kosten
+  bicycleOrSmallMotorbike?: TaxAmountType; // Velo
+  detailsMotorvehicle?: CarOrMotorbikeType[];
+  detailsMotorvehicleBusiness?: CarOrMotorbikeType[];
+  amountMotorvehicle?: TaxAmountType;
+  subtotalVehicle?: TaxAmountType; // Fahrkosten Total (ÖV + Velo + Auto)
+  cateringSubsidized?: TaxAmountType; // Verpflegung verbilligt
+  cateringNonSubsidized?: TaxAmountType; // Verpflegung nicht verbilligt
+  cateringShiftWork?: TaxAmountType; // Schichtarbeit Verpflegung
+  remainingJobCostFlatrate?: TaxAmountType; // Übrige Berufskosten (Pauschale 3%)
+  remainingJobCostEffective?: TaxAmountType; // Übrige Berufskosten (effektiv)
+  weekdayStay?: TaxAmountType;
+  furtherEducationFlatrate?: TaxAmountType;
+  sidelineFlatrate?: TaxAmountType;
+  sidelineEffective?: TaxAmountType;
+  totalAmountJobExpenses?: TaxAmountType;
+  totalIncomeMotorvehicleBusiness?: TaxAmountType;
+  cantonExtension?: CantonExtensionType;
+  vehicleTypeCar?: boolean;
+  vehicleTypeMotorbike?: boolean;
+  vehicleLeased?: boolean;
+  vehicleTypeBusinessCar?: boolean;
+  vehicleTypeBusinessMotorbike?: boolean;
+  placeOfWorkAddress?: string;
+  cateringShiftWorkNumberOfDays?: number;
+  reasonPrivateMotorvehicle?: string[];
+}
+
+export interface CarOrMotorbikeType {
+  cantonExtension?: CantonExtensionType;
+  placeOfWork?: string;
+  numberOfWorkdays?: number;
+  distance?: number;
+  numberOfTrips?: number;
+  distancePerYear?: number;
+  amountPerDistance?: MoneyType1;
+  totalAmountDetailVehicle?: MoneyType1;
+}
+
+// ============================================================================
+// Insurance Premiums Types
+// ============================================================================
+
+export interface InsurancePremiumsType {
+  deductionInsuranceAndInterestMarried?: TaxAmountType;
+  deductionInsuranceAndInterestSingle?: TaxAmountType;
+  deductionChild?: TaxAmountType;
+  totalDeductionInsuranceAndInterest?: TaxAmountType;
+  finalDeduction?: TaxAmountType; // Wert C = niedrigerer von A und B
+  cantonExtension?: CantonExtensionType;
+  privateHealthInsurance?: MoneyType1; // Private Krankenversicherungsprämien
+  privateAccidentInsurance?: MoneyType1;
+  privateLifeAndPensionInsurance?: MoneyType1;
+  interestSavings?: MoneyType1; // Zinsen von Sparkapitalien
+  subtotalAmount?: MoneyType1; // Zwischentotal
+  deductionsPremiumsReduction?: MoneyType1; // Maximaler Abzug (B)
+  paidInsuranceAndInterest?: MoneyType1; // Total bezahlte Versicherungsprämien und Zinsen (A)
+  deductionChildNumber?: any;
+  cantonalTaxDeductionSupportPersonNumber?: number;
+  cantonalTaxDeductionSupportPersonAmount?: MoneyType1;
+  federalTaxDeductionSupportPersonNumber?: number;
+  federalTaxDeductionSupportPersonAmount?: MoneyType1;
+}
+
+// ============================================================================
+// Liabilities Types
+// ============================================================================
+
+export interface ListOfLiabilitiesType {
+  privateLiabilities?: LiabilitiesListingType[];
+  businessLiabilities?: LiabilitiesListingType[];
+  cantonExtension?: CantonExtensionType;
+  totalPrivateLiabilities?: MoneyType1;
+  totalPrivateLiabilitiesInterest?: MoneyType1;
+  totalBusinessLiabilities?: MoneyType1;
+  totalBusinessLiabilitiesInterest?: MoneyType1;
+  totalAmountLiabilities?: MoneyType1;
+  totalAmountLiabilitiesInterest?: MoneyType1;
+}
+
+export interface LiabilitiesListingType {
+  cantonExtension?: CantonExtensionType;
+  creditor?: string;
+  creditorAddress?: string;
+  interestRate?: number;
+  liabilityAmount?: MoneyType1; // Schuldhöhe per 31.12.
+  interestAmount?: MoneyType1; // Zinsen im Jahr
+}
+
+// ============================================================================
+// List of Properties Types (Liegenschaftenverzeichnis)
+// ============================================================================
+
+export interface ListOfPropertiesType {
+  property?: PropertyType[];
+  totalNotionalRentalValue?: MoneyType1;
+  totalMaintenanceCosts?: MoneyType1;
+  totalMortgageInterest?: MoneyType1;
+  totalPropertyCosts?: MoneyType1;
+  totalNetPropertyRevenue?: MoneyType1;
+  totalTaxValue?: MoneyType1;
+}
+
+export interface PropertyType {
+  propertyIdentification?: {
+    street?: string;
+    houseNumber?: string;
+    town?: string;
+    swissZipCode?: number;
+    canton?: string;
+  };
+  propertyType?: string;
+  propertyArea?: number; // m²
+  propertyLandArea?: number; // m²
+  ownershipShare?: number; // Prozent
+  notionalRentalValue?: MoneyType1; // BRUTTO Eigenmietwert
+  grossRevenue?: MoneyType1; // BRUTTO
+  maintenanceCosts?: MoneyType1; // Pauschalabzug (20% bei pauschal)
+  totalPropertyCosts?: MoneyType1; // Unterhalt + Hypothekarzinsen
+  netPropertyRevenue?: MoneyType1; // NETTO nach Abzug
+  taxValue?: MoneyType1; // Vermögenssteuerwert
+  marketValue?: MoneyType1; // Marktwert (optional)
 }
 
 // ============================================================================
@@ -431,6 +646,7 @@ export interface ECH0119Message {
   header: ECH0119Header;
   content: ContentType;
 }
+
 
 
 

@@ -1,0 +1,202 @@
+{
+  "@minorVersion": 0,
+  "header": {
+    "taxPeriod": "2024",
+    "source": 0,
+    "canton": "ZH",
+    "transactionDate": "2026-01-30T12:03:41.320Z",
+    "sourceDescription": "WETAX Mobile App",
+    "periodFrom": "2024-01-01",
+    "periodTo": "2024-12-31",
+    "transactionNumber": "WETAX-2024-697c9e1d6c7a98481db6c881",
+    "cantonExtension": {
+      "canton": "ZH",
+      "documentList": [
+        {
+          "documentIdentification": {
+            "documentCanton": "ZH",
+            "documentType": "Lohnausweis(e) pro Arbeitgeber"
+          },
+          "attachmentFile": [
+            {
+              "pathFileName": "documents/697c9e1d6c7a98481db6c881/lohnausweis_Tech_Solutions_AG_0.pdf",
+              "internalSortOrder": 1
+            },
+            {
+              "pathFileName": "documents/697c9e1d6c7a98481db6c881/lohnausweis_Startup_Consulting_GmbH_1.pdf",
+              "internalSortOrder": 2
+            }
+          ]
+        },
+        {
+          "documentIdentification": {
+            "documentCanton": "ZH",
+            "documentType": "Bankauszüge"
+          },
+          "attachmentFile": [
+            {
+              "pathFileName": "documents/697c9e1d6c7a98481db6c881/bankauszug_UBS_0.pdf",
+              "internalSortOrder": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "content": {
+    "mainForm": {
+      "personDataPartner1": {
+        "partnerPersonIdentification": {
+          "officialName": "Mustermann",
+          "firstName": "Max",
+          "vn": "756.1985.1234.56",
+          "dateOfBirth": "1989-03-15"
+        },
+        "addressInformation": {
+          "street": "Bahnhofstrasse",
+          "houseNumber": "15",
+          "town": "Zürich",
+          "swissZipCode": "8001",
+          "country": "CH"
+        },
+        "maritalStatusTax": 1,
+        "religion": 2,
+        "job": "Software-Architekt",
+        "employer": "Tech Solutions AG",
+        "placeOfWork": "Zürich",
+        "phoneNumberPrivate": {
+          "phoneNumber": "+41 79 555 12 34"
+        },
+        "taxMunicipality": {
+          "municipalityId": 261,
+          "cantonAbbreviation": "ZH"
+        }
+      },
+      "revenue": {
+        "employedMainRevenue": {
+          "partner1Amount": 135000
+        },
+        "securitiesRevenue": {
+          "cantonalTax": 2700,
+          "federalTax": 2700
+        },
+        "propertyNotionalRentalValue": 19200,
+        "totalAmountRevenue": {
+          "cantonalTax": 156900,
+          "federalTax": 156900
+        }
+      },
+      "deduction": {
+        "jobExpensesPartner1": {
+          "cantonalTax": 4800,
+          "federalTax": 4800
+        },
+        "provision3aPartner1Deduction": {
+          "cantonalTax": 6500,
+          "federalTax": 6500
+        },
+        "insuranceAndInterest": {
+          "cantonalTax": 2900,
+          "federalTax": 1800
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 14200,
+          "federalTax": 13100
+        },
+        "provision3aPartner1Effective": 6500
+      },
+      "revenueCalculation": {
+        "totalAmountRevenue": {
+          "cantonalTax": 156900,
+          "federalTax": 156900
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 14200,
+          "federalTax": 13100
+        },
+        "netIncome": {
+          "cantonalTax": 142700,
+          "federalTax": 143800
+        },
+        "deductionCharity": {
+          "cantonalTax": 500,
+          "federalTax": 500
+        },
+        "adjustedNetIncome": {
+          "cantonalTax": 132200,
+          "federalTax": 133300
+        },
+        "totalAmountFiscalRevenue": {
+          "cantonalTax": 132200,
+          "federalTax": 133300
+        }
+      },
+      "asset": {
+        "movablePropertyCashValue": {
+          "fiscalValue": 5000
+        },
+        "movablePropertySecuritiesAndAssets": {
+          "fiscalValue": 85000
+        },
+        "movablePropertyHeritageEtc": {
+          "fiscalValue": 10000
+        },
+        "movablePropertyVehicle": {
+          "fiscalValue": 15000
+        },
+        "propertyHouseOrFlat": {
+          "fiscalValue": 520000
+        },
+        "totalAmountAssets": {
+          "fiscalValue": 235000
+        },
+        "totalAmountFiscalAssets": {
+          "fiscalValue": 235000
+        },
+        "moveablePropertyVehicleDescription": "Tesla Model 3",
+        "moveablePropertyVehiclePurchasePrice": 25000,
+        "moveablePropertyVehicleYear": "2022"
+      },
+      "listOfSecurities": {
+        "securityEntry": [
+          {
+            "detailedDescription": "Bankkonto Privatkonto - UBS",
+            "securitiesNumber": "CH93 0076 2011 6238 5295 7",
+            "countryOfDepositaryBank": "CH",
+            "taxValueEndOfYear": {
+              "cantonalTax": 50000,
+              "federalTax": 50000
+            },
+            "grossRevenueA": {
+              "cantonalTax": 1200,
+              "federalTax": 1200
+            }
+          },
+          {
+            "detailedDescription": "Aktie Nestlé SA",
+            "securitiesNumber": "12345678",
+            "faceValueQuantity": 100,
+            "countryOfDepositaryBank": "CH",
+            "taxValueEndOfYear": {
+              "cantonalTax": 30000,
+              "federalTax": 30000
+            },
+            "grossRevenueA": {
+              "cantonalTax": 1500,
+              "federalTax": 1500
+            }
+          }
+        ],
+        "totalTaxValue": {
+          "cantonalTax": 85000,
+          "federalTax": 85000
+        },
+        "totalGrossRevenue": {
+          "cantonalTax": 2700,
+          "federalTax": 2700
+        },
+        "withholdingTax": 945
+      }
+    }
+  }
+}

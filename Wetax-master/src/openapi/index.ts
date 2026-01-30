@@ -17,6 +17,10 @@ export type { AdminTaxReturnListResponse } from './models/AdminTaxReturnListResp
 export type { AdminUpdateUserBody } from './models/AdminUpdateUserBody';
 export type { AdminUserListResponse } from './models/AdminUserListResponse';
 export type { BankkontoScanT } from './models/BankkontoScanT';
+export type { ChatHistoryResponse } from './models/ChatHistoryResponse';
+export { ChatMessage } from './models/ChatMessage';
+export { ChatMessageResponse } from './models/ChatMessageResponse';
+export type { ChatUsageResponse } from './models/ChatUsageResponse';
 export type { CreateTaxReturnBody } from './models/CreateTaxReturnBody';
 export type { LoginBody } from './models/LoginBody';
 export type { LoginEmailBody } from './models/LoginEmailBody';
@@ -30,6 +34,7 @@ export type { ScanBody } from './models/ScanBody';
 export type { ScanResponse } from './models/ScanResponse';
 export { ScanType_Bankkonto } from './models/ScanType_Bankkonto';
 export { ScanType_Lohnausweis } from './models/ScanType_Lohnausweis';
+export type { SendChatMessageBody } from './models/SendChatMessageBody';
 export type { SubmitVerificationCodeBody } from './models/SubmitVerificationCodeBody';
 export { SystemStats } from './models/SystemStats';
 export type { TaxAmount } from './models/TaxAmount';
@@ -41,6 +46,8 @@ export type { User } from './models/User';
 export { UserRole } from './models/UserRole';
 export type { UserStats } from './models/UserStats';
 export type { UserT } from './models/UserT';
+export { Zivilstand } from './models/Zivilstand';
 
 export { ApiService } from './services/ApiService';
+export { ChatService } from './services/ChatService';
 export { SuperAdminService } from './services/SuperAdminService';

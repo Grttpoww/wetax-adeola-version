@@ -1252,3 +1252,4 @@ export function calculateVermoegenssteuer(amount: number): number {
 
 
 
+

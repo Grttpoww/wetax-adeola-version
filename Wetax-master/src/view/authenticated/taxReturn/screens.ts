@@ -29,7 +29,7 @@ const verheiratetScreen: ScreenT<'verheiratet'> = {
       ...data.personData,
       data: {
         ...data.personData.data,
-        zivilstand: res.start ? 'Verheiratet' : 'Ledig',
+        zivilstand: res.start ? 'verheiratet' : 'ledig',
       },
     },
   }),
@@ -239,17 +239,156 @@ const sozialUndVersicherungseinnahmenScreen: ScreenT<'einkuenfteSozialversicheru
   name: ScreenEnum.SozialUndVersicherungseinnahmen,
   type: ScreenTypeEnum.YesNo,
   title: 'Sozial- und Versicherungseinnahmen',
-
   question: 'Hast du schon mal Geld aus Versicherungen oder sozialen Sicherungssystemen erhalten?',
   text: 'z.B. Arbeitslosengeld, Krankengeld, Mutterschaftsgeld, Rente',
   dataKey: 'einkuenfteSozialversicherung',
   isDone: (v) => v.start !== undefined,
 }
+
+const einkuenfteSozialversicherungOverview: ScreenT<'einkuenfteSozialversicherung', TaxReturnData['einkuenfteSozialversicherung']['data'][0]> = {
+  name: ScreenEnum.EinkuenfteSozialversicherungOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Sozial- und Versicherungseinnahmen - Übersicht',
+  dataKey: 'einkuenfteSozialversicherung',
+  helpText: 'Gib alle Einkünfte aus Sozialversicherungen und Versicherungen an.',
+  detailScreen: ScreenEnum.EinkuenfteSozialversicherungDetail,
+  getLabel: (data) => {
+    if (data.art === 'ahvIvRente') return 'AHV/IV-Rente'
+    if (data.art === 'pensionskasse') return 'Pensionskasse'
+    if (data.art === 'arbeitgeberRente') return 'Arbeitgeber-Rente'
+    if (data.art === 'suva') return 'SUVA'
+    if (data.art === 'militarversicherung') return 'Militärversicherung'
+    if (data.art === 'saeule3a') return '3. Säule a'
+    if (data.art === 'leibrente') return 'Leibrente'
+    return 'Sonstige'
+  },
+  getSublabel: (data) => `CHF ${data.steuerbarerBetrag || data.gesamtbetrag || 0}`,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+}
+
+const einkuenfteSozialversicherungDetail: ScreenT<'einkuenfteSozialversicherung', TaxReturnData['einkuenfteSozialversicherung']['data'][0]> = {
+  name: ScreenEnum.EinkuenfteSozialversicherungDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Sozial- oder Versicherungseinnahme hinzufügen',
+  dataKey: 'einkuenfteSozialversicherung',
+  helpText: 'Gib die Details zur Einnahme ein. Der steuerbare Anteil wird je nach Art berechnet.',
+  getLabel: (data) => {
+    if (data.art === 'ahvIvRente') return 'AHV/IV-Rente'
+    if (data.art === 'pensionskasse') return 'Pensionskasse'
+    if (data.art === 'arbeitgeberRente') return 'Arbeitgeber-Rente'
+    if (data.art === 'suva') return 'SUVA'
+    if (data.art === 'militarversicherung') return 'Militärversicherung'
+    if (data.art === 'saeule3a') return '3. Säule a'
+    if (data.art === 'leibrente') return 'Leibrente'
+    return 'Sonstige'
+  },
+  overviewScreen: ScreenEnum.EinkuenfteSozialversicherungOverview,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Art der Einkünfte',
+        type: FormFieldType.SelectInput,
+        items: [
+          { label: 'AHV/IV-Rente', value: 'ahvIvRente' },
+          { label: 'Pensionskasse (2. Säule)', value: 'pensionskasse' },
+          { label: 'Arbeitgeber-Rente', value: 'arbeitgeberRente' },
+          { label: 'SUVA', value: 'suva' },
+          { label: 'Militärversicherung', value: 'militarversicherung' },
+          { label: '3. Säule a', value: 'saeule3a' },
+          { label: 'Leibrente', value: 'leibrente' },
+          { label: 'Sonstige', value: 'sonstige' },
+        ],
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('art'),
+      },
+      {
+        label: 'Gesamtbetrag (Vorkolonne)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('gesamtbetrag'),
+      },
+      {
+        label: 'Steuerbarer Betrag (Hauptkolonne)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF (wird automatisch berechnet)',
+          editable: false,
+        },
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('steuerbarerBetrag'),
+      },
+      {
+        label: 'Rentenbeginn (Datum)',
+        type: FormFieldType.DatePicker,
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('rentenbeginn'),
+        defaultDate: '1987.01.01',
+        isVisible: (data) => data.art === 'pensionskasse',
+      },
+      {
+        label: 'Eigenbeiträge (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'z.B. 20',
+        },
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('eigenbeitraegeProzent'),
+        isVisible: (data) => data.art === 'pensionskasse',
+      },
+      {
+        label: 'Vorsorgeverhältnis bereits 31.12.1985 bestanden?',
+        type: FormFieldType.Checkbox,
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('vorsorgeverhaeltnisBereits1985'),
+        isVisible: (data) => data.art === 'pensionskasse',
+      },
+      {
+        label: 'Unfalldatum',
+        type: FormFieldType.DatePicker,
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('unfalldatum'),
+        defaultDate: '1986.01.01',
+        isVisible: (data) => data.art === 'suva',
+      },
+      {
+        label: 'Prämien vom Versicherten bezahlt (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'z.B. 100',
+        },
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('praemienVomVersicherten'),
+        isVisible: (data) => data.art === 'suva',
+      },
+      {
+        label: 'Leibrente-Berechnungssatz (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'ESTV-Berechnungssatz',
+        },
+        lens: Lens.fromProp<TaxReturnData['einkuenfteSozialversicherung']['data'][0]>()('leibrenteBerechnungssatz'),
+        isVisible: (data) => data.art === 'leibrente',
+      },
+    ],
+  },
+}
 const erwerbsausfallentschaedigungScreen: ScreenT<'erwerbsausfallentschaedigung'> = {
   name: ScreenEnum.Erwerbsausfallentschädigung,
   type: ScreenTypeEnum.YesNo,
   title: 'Erwerbsausfallentschädigung',
-
   question:
     'Hast du schon mal eine Entschädigung bekommen, weil du vorübergehend nicht arbeiten konntest?',
   text: 'z.B. wegen Krankheit, Unfall, Militärdienst oder Mutterschaft',
@@ -257,36 +396,408 @@ const erwerbsausfallentschaedigungScreen: ScreenT<'erwerbsausfallentschaedigung'
   isDone: (v) => v.start !== undefined,
 }
 
+const erwerbsausfallentschaedigungOverview: ScreenT<'erwerbsausfallentschaedigung', TaxReturnData['erwerbsausfallentschaedigung']['data'][0]> = {
+  name: ScreenEnum.ErwerbsausfallentschaedigungOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Erwerbsausfallentschädigungen - Übersicht',
+  dataKey: 'erwerbsausfallentschaedigung',
+  helpText: 'Gib alle Erwerbsausfallentschädigungen an, die du erhalten hast.',
+  detailScreen: ScreenEnum.ErwerbsausfallentschaedigungDetail,
+  getLabel: (data) => {
+    if (data.art === 'arbeitslosigkeit') return 'Arbeitslosigkeit'
+    if (data.art === 'krankheit') return 'Krankheit'
+    if (data.art === 'unfall') return 'Unfall'
+    if (data.art === 'militar') return 'Militärdienst'
+    if (data.art === 'mutterschaft') return 'Mutterschaft'
+    return 'Sonstige'
+  },
+  getSublabel: (data) => `CHF ${data.betrag || 0}${data.von && data.bis ? ` (${data.von} - ${data.bis})` : ''}`,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+}
+
+const erwerbsausfallentschaedigungDetail: ScreenT<'erwerbsausfallentschaedigung', TaxReturnData['erwerbsausfallentschaedigung']['data'][0]> = {
+  name: ScreenEnum.ErwerbsausfallentschaedigungDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Erwerbsausfallentschädigung hinzufügen',
+  dataKey: 'erwerbsausfallentschaedigung',
+  helpText: 'Gib die Details zur Erwerbsausfallentschädigung ein.',
+  getLabel: (data) => {
+    if (data.art === 'arbeitslosigkeit') return 'Arbeitslosigkeit'
+    if (data.art === 'krankheit') return 'Krankheit'
+    if (data.art === 'unfall') return 'Unfall'
+    if (data.art === 'militar') return 'Militärdienst'
+    if (data.art === 'mutterschaft') return 'Mutterschaft'
+    return 'Sonstige'
+  },
+  overviewScreen: ScreenEnum.ErwerbsausfallentschaedigungOverview,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Art der Entschädigung',
+        type: FormFieldType.SelectInput,
+        items: [
+          { label: 'Arbeitslosigkeit', value: 'arbeitslosigkeit' },
+          { label: 'Krankheit', value: 'krankheit' },
+          { label: 'Unfall', value: 'unfall' },
+          { label: 'Militärdienst', value: 'militar' },
+          { label: 'Mutterschaft', value: 'mutterschaft' },
+          { label: 'Sonstige', value: 'sonstige' },
+        ],
+        lens: Lens.fromProp<TaxReturnData['erwerbsausfallentschaedigung']['data'][0]>()('art'),
+      },
+      {
+        label: 'Betrag der Entschädigung (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['erwerbsausfallentschaedigung']['data'][0]>()('betrag'),
+      },
+      {
+        label: 'Von (Datum)',
+        type: FormFieldType.DatePicker,
+        lens: Lens.fromProp<TaxReturnData['erwerbsausfallentschaedigung']['data'][0]>()('von'),
+        defaultDate: '2025.01.01',
+      },
+      {
+        label: 'Bis (Datum)',
+        type: FormFieldType.DatePicker,
+        lens: Lens.fromProp<TaxReturnData['erwerbsausfallentschaedigung']['data'][0]>()('bis'),
+        defaultDate: '2025.12.31',
+      },
+    ],
+  },
+}
+
 const lebensOderRentenversicherung: ScreenT<'lebensOderRentenversicherung'> = {
   name: ScreenEnum.LebensOderRentenversicherung,
   type: ScreenTypeEnum.YesNo,
   title: 'Rentenversicherung',
-
   question: 'Hast du schon mal Geld aus einer Lebens- oder Rentenversicherung erhalten?',
   text: '',
   dataKey: 'lebensOderRentenversicherung',
   isDone: (v) => v.start !== undefined,
 }
+
+const lebensOderRentenversicherungOverview: ScreenT<'lebensOderRentenversicherung', TaxReturnData['lebensOderRentenversicherung']['data'][0]> = {
+  name: ScreenEnum.LebensOderRentenversicherungOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Lebens- oder Rentenversicherungen - Übersicht',
+  dataKey: 'lebensOderRentenversicherung',
+  helpText: 'Gib alle Lebens- oder Rentenversicherungen an, aus denen du Leistungen erhalten hast.',
+  detailScreen: ScreenEnum.LebensOderRentenversicherungDetail,
+  getLabel: (data) => {
+    if (data.art === 'lebensversicherung') return 'Lebensversicherung'
+    if (data.art === 'rentenversicherung') return 'Rentenversicherung'
+    if (data.art === 'leibrente') return 'Leibrente'
+    return 'Nicht ausgefüllt'
+  },
+  getSublabel: (data) => `CHF ${data.steuerbarerBetrag || data.gesamtbetrag || 0}`,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+}
+
+const lebensOderRentenversicherungDetail: ScreenT<'lebensOderRentenversicherung', TaxReturnData['lebensOderRentenversicherung']['data'][0]> = {
+  name: ScreenEnum.LebensOderRentenversicherungDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Lebens- oder Rentenversicherung hinzufügen',
+  dataKey: 'lebensOderRentenversicherung',
+  helpText: 'Gib die Details zur Lebens- oder Rentenversicherung ein.',
+  getLabel: (data) => {
+    if (data.art === 'lebensversicherung') return 'Lebensversicherung'
+    if (data.art === 'rentenversicherung') return 'Rentenversicherung'
+    if (data.art === 'leibrente') return 'Leibrente'
+    return 'Nicht ausgefüllt'
+  },
+  overviewScreen: ScreenEnum.LebensOderRentenversicherungOverview,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Art der Versicherung',
+        type: FormFieldType.SelectInput,
+        items: [
+          { label: 'Lebensversicherung', value: 'lebensversicherung' },
+          { label: 'Rentenversicherung', value: 'rentenversicherung' },
+          { label: 'Leibrente', value: 'leibrente' },
+        ],
+        lens: Lens.fromProp<TaxReturnData['lebensOderRentenversicherung']['data'][0]>()('art'),
+      },
+      {
+        label: 'Gesamtbetrag (Vorkolonne)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['lebensOderRentenversicherung']['data'][0]>()('gesamtbetrag'),
+      },
+      {
+        label: 'Steuerbarer Betrag (Hauptkolonne)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF (wird automatisch berechnet)',
+          editable: false,
+        },
+        lens: Lens.fromProp<TaxReturnData['lebensOderRentenversicherung']['data'][0]>()('steuerbarerBetrag'),
+      },
+      {
+        label: 'Leibrente-Berechnungssatz (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'ESTV-Berechnungssatz',
+        },
+        lens: Lens.fromProp<TaxReturnData['lebensOderRentenversicherung']['data'][0]>()('leibrenteBerechnungssatz'),
+        isVisible: (data) => data.art === 'leibrente',
+      },
+    ],
+  },
+}
+
 const geschaeftsOderKorporationsanteileScreen: ScreenT<'geschaeftsOderKorporationsanteile'> = {
   name: ScreenEnum.GeschaeftsOderKorporationsanteile,
   type: ScreenTypeEnum.YesNo,
   title: 'Geschäfts- oder Korporationsanteile',
-
   question: 'Besitzt du Anteile an einem Unternehmen oder einer Gemeinschaft?',
   text: '',
   dataKey: 'geschaeftsOderKorporationsanteile',
   isDone: (v) => v.start !== undefined,
 }
 
+const geschaeftsOderKorporationsanteileOverview: ScreenT<'geschaeftsOderKorporationsanteile', TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]> = {
+  name: ScreenEnum.GeschaeftsOderKorporationsanteileOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Geschäfts- oder Korporationsanteile - Übersicht',
+  dataKey: 'geschaeftsOderKorporationsanteile',
+  helpText: 'Gib alle Geschäfts- oder Korporationsanteile an.',
+  detailScreen: ScreenEnum.GeschaeftsOderKorporationsanteileDetail,
+  getLabel: (data) => data.bezeichnung || 'Nicht ausgefüllt',
+  getSublabel: (data) => `Ertrag: CHF ${data.ertrag || 0}`,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+}
+
+const geschaeftsOderKorporationsanteileDetail: ScreenT<'geschaeftsOderKorporationsanteile', TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]> = {
+  name: ScreenEnum.GeschaeftsOderKorporationsanteileDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Geschäfts- oder Korporationsanteil hinzufügen',
+  dataKey: 'geschaeftsOderKorporationsanteile',
+  helpText: 'Gib die Details zum Geschäfts- oder Korporationsanteil ein.',
+  getLabel: (data) => data.bezeichnung || 'Nicht ausgefüllt',
+  overviewScreen: ScreenEnum.GeschaeftsOderKorporationsanteileOverview,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Bezeichnung des Unternehmens/der Gemeinschaft',
+        type: FormFieldType.TextInput,
+        inputProps: { placeholder: 'Bezeichnung' },
+        lens: Lens.fromProp<TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]>()('bezeichnung'),
+      },
+      {
+        label: 'Beteiligungsquote (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'z.B. 15',
+        },
+        lens: Lens.fromProp<TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]>()('beteiligungsquote'),
+      },
+      {
+        label: 'Ertrag aus Geschäfts-/Korporationsanteilen (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]>()('ertrag'),
+      },
+      {
+        label: 'Ist qualifizierte Beteiligung? (mindestens 10%)',
+        type: FormFieldType.Checkbox,
+        lens: Lens.fromProp<TaxReturnData['geschaeftsOderKorporationsanteile']['data'][0]>()('istQualifizierteBeteiligung'),
+      },
+    ],
+  },
+}
+
+// Unterhaltsbeiträge (Abzug Ziffer 13)
+const unterhaltsbeitraegeYesNoScreen: ScreenT<'unterhaltsbeitraege'> = {
+  name: ScreenEnum.UnterhaltsbeitraegeYesNo,
+  type: ScreenTypeEnum.YesNo,
+  title: 'Unterhaltsbeiträge',
+  question: 'Leistest du Unterhaltsbeiträge oder Rentenleistungen?',
+  text: 'z.B. Alimente an geschiedenen Ehegatten, für Kinder, oder Leibrenten',
+  dataKey: 'unterhaltsbeitraege',
+  isDone: (v) => v.start !== undefined,
+}
+
+const unterhaltsbeitraegeEhegattenScreen: ScreenT<'unterhaltsbeitraege', TaxReturnData['unterhaltsbeitraege']['data']> = {
+  name: ScreenEnum.UnterhaltsbeitraegeEhegatten,
+  type: ScreenTypeEnum.ObjForm,
+  title: 'Unterhaltsbeiträge an Ehegatten',
+  dataKey: 'unterhaltsbeitraege',
+  helpText: 'Unterhaltsbeiträge an geschiedenen/getrennten Ehegatten sind voll abzugsfähig.',
+  isDone: (v) => v.data.anEhegatten !== undefined,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Unterhaltsbeiträge an geschiedenen/getrennten Ehegatten (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['unterhaltsbeitraege']['data']>()('anEhegatten'),
+      },
+    ],
+  },
+}
+
+// Unterhaltsbeiträge für Kinder und Rentenleistungen werden als Teil von unterhaltsbeitraege.data verwaltet
+// Für verschachtelte Arrays müssen wir eine andere Struktur verwenden - vorerst vereinfacht als ObjForm
+
 const verschuldetScreen: ScreenT<'verschuldet'> = {
   name: ScreenEnum.Verschuldet,
   type: ScreenTypeEnum.YesNo,
   title: 'Schulden',
-
   question: 'Hast du aktuell Schulden?',
   text: 'z.B. Kredite, Kreditkartenschulden, privates Darlehen',
   dataKey: 'verschuldet',
   isDone: (v) => v.start !== undefined,
+}
+
+const verschuldetOverview: ScreenT<'verschuldet', TaxReturnData['verschuldet']['data'][0]> = {
+  name: ScreenEnum.VerschuldetOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Schulden - Übersicht',
+  dataKey: 'verschuldet',
+  helpText: 'Gib alle deine Schulden per 31.12. an (für Vermögenssteuer).',
+  detailScreen: ScreenEnum.VerschuldetDetail,
+  getLabel: (data) => data.glauebiger || 'Nicht ausgefüllt',
+  getSublabel: (data) => `CHF ${data.schuldhoehe || 0}`,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+}
+
+const verschuldetDetail: ScreenT<'verschuldet', TaxReturnData['verschuldet']['data'][0]> = {
+  name: ScreenEnum.VerschuldetDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Schuld hinzufügen',
+  dataKey: 'verschuldet',
+  helpText: 'Gib die Details zur Schuld ein (für Schuldenverzeichnis).',
+  getLabel: (data) => data.glauebiger || 'Nicht ausgefüllt',
+  overviewScreen: ScreenEnum.VerschuldetOverview,
+  isDone: (v) => v.finished === true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Gläubiger',
+        type: FormFieldType.TextInput,
+        inputProps: { placeholder: 'Name des Gläubigers' },
+        lens: Lens.fromProp<TaxReturnData['verschuldet']['data'][0]>()('glauebiger'),
+      },
+      {
+        label: 'Adresse des Gläubigers',
+        type: FormFieldType.TextInput,
+        inputProps: { placeholder: 'Vollständige Adresse' },
+        lens: Lens.fromProp<TaxReturnData['verschuldet']['data'][0]>()('glauebigerAdresse'),
+      },
+      {
+        label: 'Zinssatz (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'z.B. 2.5',
+        },
+        lens: Lens.fromProp<TaxReturnData['verschuldet']['data'][0]>()('zinssatz'),
+      },
+      {
+        label: 'Schuldhöhe per 31.12. (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['verschuldet']['data'][0]>()('schuldhoehe'),
+      },
+      {
+        label: 'Zinsen im Steuerjahr (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['verschuldet']['data'][0]>()('zinsenImJahr'),
+      },
+    ],
+  },
+}
+
+const schuldzinsenYesNoScreen: ScreenT<'schuldzinsen'> = {
+  name: ScreenEnum.SchuldzinsenYesNo,
+  type: ScreenTypeEnum.YesNo,
+  title: 'Schuldzinsen',
+  question: 'Hast du im Steuerjahr Schuldzinsen auf Privatvermögen bezahlt?',
+  text: 'z.B. Hypothekarzinsen, Zinsen auf Privatdarlehen (ohne Baurechtszinsen)',
+  dataKey: 'schuldzinsen',
+  isDone: (v) => v.start !== undefined,
+}
+
+const schuldzinsenAmountScreen: ScreenT<'schuldzinsen', TaxReturnData['schuldzinsen']['data']> = {
+  name: ScreenEnum.SchuldzinsenAmount,
+  type: ScreenTypeEnum.ObjForm,
+  title: 'Schuldzinsen',
+  dataKey: 'schuldzinsen',
+  helpText:
+    'Gib hier die Summe aller im Steuerjahr bezahlten Schuldzinsen auf Privatvermögen ein (ohne Baurechtszinsen).',
+  isDone: (v) => v.data.betrag !== undefined,
+  hide: (v, data) => v.start !== true || data.verschuldet?.start === false,
+  form: {
+    fields: [
+      {
+        label: 'Total bezahlte Schuldzinsen im Steuerjahr',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['schuldzinsen']['data']>()('betrag'),
+      },
+    ],
+  },
 }
 const geldVerdientScreen: ScreenT<'geldVerdient'> = {
   name: ScreenEnum.GeldVerdient,
@@ -321,6 +832,17 @@ const geldVerdientDetailScreen: ScreenT<'geldVerdient', TaxReturnData['geldVerdi
   hide: (v) => v.start !== true,
   form: {
     fields: [
+      {
+        label: 'Für welche Person?',
+        type: FormFieldType.NumberSelectInput,
+        items: [
+          { label: 'Person 1', value: 1 },
+          { label: 'Person 2', value: 2 },
+        ],
+        lens: Lens.fromProp<TaxReturnData['geldVerdient']['data'][0]>()('person'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
+      },
       {
         label: 'von',
         type: FormFieldType.DatePicker,
@@ -398,7 +920,7 @@ const oevAboKostenScreen: ScreenT<'oevArbeit', { name: boolean | null }> = {
   form: {
     fields: [
       {
-        label: 'Kosten von deinem ÖV Abo',
+        label: 'Person 1: Kosten ÖV Abo',
         type: FormFieldType.CurrencyInput,
         inputProps: {
           autoCorrect: false,
@@ -407,6 +929,19 @@ const oevAboKostenScreen: ScreenT<'oevArbeit', { name: boolean | null }> = {
           placeholder: '',
         },
         lens: Lens.fromProp<TaxReturnData['oevArbeit']['data']>()('kosten'),
+      },
+      {
+        label: 'Person 2: Kosten ÖV Abo',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: '',
+        },
+        lens: Lens.fromProp<TaxReturnData['oevArbeit']['data']>()('partner2Kosten'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
       },
     ],
   },
@@ -611,7 +1146,7 @@ const tageVerpflegungAufArbeitScreen: ScreenT<
   form: {
     fields: [
       {
-        label: 'Anzahl Tage im Jahr Verpflegung auf Arbeit',
+        label: 'Person 1: Anzahl Tage im Jahr Verpflegung auf Arbeit',
         description: 'Ein volles Arbeitsjahr entspricht 260 Arbeitstagen',
         type: FormFieldType.NumberInput,
         inputProps: {
@@ -620,13 +1155,32 @@ const tageVerpflegungAufArbeitScreen: ScreenT<
           maxLength: 16,
           placeholder: 'anzahl Tage Verpflegung',
         },
-
         lens: Lens.fromProp<TaxReturnData['verpflegungAufArbeit']['data']>()('anzahlTage'),
+      },
+      {
+        label: 'Person 2: Anzahl Tage im Jahr Verpflegung auf Arbeit',
+        description: 'Ein volles Arbeitsjahr entspricht 260 Arbeitstagen',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'anzahl Tage Verpflegung',
+        },
+        lens: Lens.fromProp<TaxReturnData['verpflegungAufArbeit']['data']>()('partner2AnzahlTage'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
       },
     ],
   },
   hide: (v) => v.start !== true,
-  isDone: (v) => v.data.anzahlTage !== undefined,
+  isDone: (v, rootData) => {
+    const isMarried = (rootData as any)?.personData?.data?.zivilstand === 'verheiratet'
+    if (isMarried) {
+      return v.data.anzahlTage !== undefined && v.data.partner2AnzahlTage !== undefined
+    }
+    return v.data.anzahlTage !== undefined
+  },
 }
 
 const essenVerbilligungenVomArbeitgeberScreen: ScreenT<'essenVerbilligungenVomArbeitgeber'> = {
@@ -661,7 +1215,7 @@ const tageSchichtArbeitScreen: ScreenT<'schichtarbeit', TaxReturnData['schichtar
   form: {
     fields: [
       {
-        label: 'Anzahl Tage im Jahr Schichtarbeit',
+        label: 'Person 1: Anzahl Tage im Jahr Schichtarbeit',
         type: FormFieldType.NumberInput,
         inputProps: {
           autoCorrect: false,
@@ -671,10 +1225,29 @@ const tageSchichtArbeitScreen: ScreenT<'schichtarbeit', TaxReturnData['schichtar
         },
         lens: Lens.fromProp<TaxReturnData['schichtarbeit']['data']>()('wieVieleTageImJahr'),
       },
+      {
+        label: 'Person 2: Anzahl Tage im Jahr Schichtarbeit',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'anzahl Tage Schichtarbeit',
+        },
+        lens: Lens.fromProp<TaxReturnData['schichtarbeit']['data']>()('partner2WieVieleTageImJahr'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
+      },
     ],
   },
   hide: (v) => v.start !== true,
-  isDone: (v) => v.data.wieVieleTageImJahr !== undefined,
+  isDone: (v, rootData) => {
+    const isMarried = (rootData as any)?.personData?.data?.zivilstand === 'verheiratet'
+    if (isMarried) {
+      return v.data.wieVieleTageImJahr !== undefined && v.data.partner2WieVieleTageImJahr !== undefined
+    }
+    return v.data.wieVieleTageImJahr !== undefined
+  },
 }
 
 const wochenaufenthaltScreen: ScreenT<'wochenaufenthalt'> = {
@@ -782,6 +1355,17 @@ const inAusbildungDetail: ScreenT<'inAusbildung', TaxReturnData['inAusbildung'][
   form: {
     fields: [
       {
+        label: 'Für welche Person?',
+        type: FormFieldType.NumberSelectInput,
+        items: [
+          { label: 'Person 1', value: 1 },
+          { label: 'Person 2', value: 2 },
+        ],
+        lens: Lens.fromProp<TaxReturnData['inAusbildung']['data'][0]>()('person'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
+      },
+      {
         label: 'Bezeichung',
         type: FormFieldType.TextInput,
         inputProps: {
@@ -853,7 +1437,7 @@ const saeule3aAmountScreen: ScreenT<'saeule3a', TaxReturnData['saeule3a']['data'
   form: {
     fields: [
       {
-        label: 'Wie viel hast du in die Säule 3a eingezahlt?',
+        label: 'Person 1: Säule 3a Betrag',
         type: FormFieldType.CurrencyInput,
         inputProps: {
           autoCorrect: false,
@@ -862,6 +1446,19 @@ const saeule3aAmountScreen: ScreenT<'saeule3a', TaxReturnData['saeule3a']['data'
           placeholder: 'Betrag eingezahlt in Säule 3a',
         },
         lens: Lens.fromProp<TaxReturnData['saeule3a']['data']>()('betrag'),
+      },
+      {
+        label: 'Person 2: Säule 3a Betrag',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'Betrag eingezahlt in Säule 3a',
+        },
+        lens: Lens.fromProp<TaxReturnData['saeule3a']['data']>()('partner2Betrag'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
       },
     ],
   },
@@ -890,7 +1487,7 @@ const versicherungspraemieAmountScreen: ScreenT<
   form: {
     fields: [
       {
-        label: 'Wie viel hast du an Versicherungsprämie bezahlt?',
+        label: 'Person 1: Versicherungsprämien Betrag',
         type: FormFieldType.CurrencyInput,
         inputProps: {
           autoCorrect: false,
@@ -899,6 +1496,19 @@ const versicherungspraemieAmountScreen: ScreenT<
           placeholder: 'Versicherungsprämie Betrag',
         },
         lens: Lens.fromProp<TaxReturnData['versicherungspraemie']['data']>()('betrag'),
+      },
+      {
+        label: 'Person 2: Versicherungsprämien Betrag',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'Versicherungsprämie Betrag',
+        },
+        lens: Lens.fromProp<TaxReturnData['versicherungspraemie']['data']>()('partner2Betrag'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
       },
     ],
   },
@@ -923,7 +1533,7 @@ const privateUnfallAmountScreen: ScreenT<'privateUnfall', TaxReturnData['private
   form: {
     fields: [
       {
-        label: 'Wie viel hast du an die Private Unfallversicherung bezahlt?',
+        label: 'Person 1: Private Unfallversicherung Betrag',
         type: FormFieldType.CurrencyInput,
         inputProps: {
           autoCorrect: false,
@@ -932,6 +1542,19 @@ const privateUnfallAmountScreen: ScreenT<'privateUnfall', TaxReturnData['private
           placeholder: 'Private Unfallversicherung Betrag',
         },
         lens: Lens.fromProp<TaxReturnData['privateUnfall']['data']>()('betrag'),
+      },
+      {
+        label: 'Person 2: Private Unfallversicherung Betrag',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'Private Unfallversicherung Betrag',
+        },
+        lens: Lens.fromProp<TaxReturnData['privateUnfall']['data']>()('partner2Betrag'),
+        isVisibleWithRoot: (_formData, rootData) =>
+          (rootData as any)?.personData?.data?.zivilstand === 'verheiratet',
       },
     ],
   },
@@ -1066,6 +1689,123 @@ const edelmetalleAmount: ScreenT<'edelmetalle', TaxReturnData['edelmetalle']['da
           placeholder: 'Total Wert Edelmetalle',
         },
         lens: Lens.fromProp<TaxReturnData['bargeld']['data']>()('betrag'),
+      },
+    ],
+  },
+}
+
+const liegenschaftenYesNoScreen: ScreenT<'liegenschaften'> = {
+  name: ScreenEnum.LiegenschaftenYesNo,
+  type: ScreenTypeEnum.YesNo,
+  dataKey: 'liegenschaften',
+  title: 'Liegenschaften',
+  text: '',
+  question: 'Besitzt du Liegenschaften oder Immobilien (Einfamilienhaus, Wohnung, Mehrfamilienhaus, Geschäftshaus)?',
+  isDone: (v) => v.start !== undefined,
+}
+
+const liegenschaftenOverview: ScreenT<'liegenschaften', TaxReturnData['liegenschaften']['data'][0]> = {
+  name: ScreenEnum.LiegenschaftenOverview,
+  type: ScreenTypeEnum.ArrayOverview,
+  title: 'Liegenschaften',
+  dataKey: 'liegenschaften',
+  helpText:
+    'Gib alle deine Liegenschaften an (im In- und Ausland). Du findest die Werte auf dem Liegenschaftenbewertungsblatt deiner Gemeinde.',
+  detailScreen: ScreenEnum.LiegenschaftenDetail,
+  getLabel: (data) => data.bezeichnung || data.ort || 'Liegenschaft',
+  getSublabel: (data) => {
+    const kanton = data.kanton ? ` (${data.kanton})` : ''
+    const vermoegen = data.vermoegenssteuerwert ?? 0
+    return `${data.ort || ''}${kanton} – Vermögenssteuerwert CHF ${vermoegen}`
+  },
+  isDone: (v) => v.data && v.data.length > 0,
+  hide: (v) => v.start !== true,
+}
+
+const liegenschaftenDetail: ScreenT<'liegenschaften', TaxReturnData['liegenschaften']['data'][0]> = {
+  name: ScreenEnum.LiegenschaftenDetail,
+  type: ScreenTypeEnum.ArrayForm,
+  title: 'Liegenschaft erfassen',
+  dataKey: 'liegenschaften',
+  helpText:
+    'Erfasse hier die Angaben gemäss Liegenschaftenverzeichnis / Bewertungsbescheid. Falls du unsicher bist, nutze die Werte aus der letzten Steuerveranlagung.',
+  getLabel: (data) => data.bezeichnung || data.ort || 'Liegenschaft',
+  overviewScreen: ScreenEnum.LiegenschaftenOverview,
+  isDone: () => true,
+  hide: (v) => v.start !== true,
+  form: {
+    fields: [
+      {
+        label: 'Bezeichnung',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'z.B. Einfamilienhaus Zürich-Seebach',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('bezeichnung'),
+      },
+      {
+        label: 'Ort / Gemeinde',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'z.B. Zürich',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('ort'),
+      },
+      {
+        label: 'Kanton',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'z.B. ZH',
+          maxLength: 2,
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('kanton'),
+      },
+      {
+        label: 'Eigenmietwert oder Jahres-Mietertrag (Bruttojahresertrag 2025)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('eigenmietwertOderMietertrag'),
+      },
+      {
+        label: 'Liegenschaft vorwiegend geschäftlich genutzt?',
+        type: FormFieldType.Checkbox,
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('istGeschaeftlich'),
+      },
+      {
+        label: 'Art des Unterhaltsabzugs (\"pauschal\" oder \"effektiv\")',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'pauschal oder effektiv',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('unterhaltArt'),
+      },
+      {
+        label: 'Effektive Unterhalts- und Verwaltungskosten (falls effektiv)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('unterhaltBetrag'),
+        isVisible: (data) => data.unterhaltArt === 'effektiv',
+      },
+      {
+        label: 'Vermögenssteuerwert per 31.12.2025',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF gemäss Bewertungsbescheid',
+        },
+        lens: Lens.fromProp<TaxReturnData['liegenschaften']['data'][0]>()('vermoegenssteuerwert'),
       },
     ],
   },
@@ -1263,6 +2003,33 @@ const aktienDetailScreen: ScreenT<'aktien', TaxReturnData['aktien']['data'][0]> 
         },
         lens: Lens.fromProp<TaxReturnData['aktien']['data'][0]>()('steuerwertEndeJahr'),
       },
+      {
+        label: 'Dividendenertrag im Steuerjahr (CHF)',
+        type: FormFieldType.CurrencyInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'number-pad',
+          maxLength: 16,
+          placeholder: 'CHF',
+        },
+        lens: Lens.fromProp<TaxReturnData['aktien']['data'][0]>()('dividendenertrag'),
+      },
+      {
+        label: 'Beteiligungsquote (%)',
+        type: FormFieldType.NumberInput,
+        inputProps: {
+          autoCorrect: false,
+          keyboardType: 'decimal-pad',
+          maxLength: 10,
+          placeholder: 'z.B. 15',
+        },
+        lens: Lens.fromProp<TaxReturnData['aktien']['data'][0]>()('beteiligungsquote'),
+      },
+      {
+        label: 'Ist qualifizierte Beteiligung? (mindestens 10%)',
+        type: FormFieldType.Checkbox,
+        lens: Lens.fromProp<TaxReturnData['aktien']['data'][0]>()('istQualifizierteBeteiligung'),
+      },
     ],
   },
 }
@@ -1428,7 +2195,7 @@ const personalienScreen: ScreenT<'personData', TaxReturnData['personData']['data
   title: 'Personalien Überprüfen',
   isDone: (v) => {
     const d = v.data
-    return !!(
+    const baseOk = !!(
       d.vorname &&
       d.nachname &&
       d.geburtsdatum &&
@@ -1441,6 +2208,14 @@ const personalienScreen: ScreenT<'personData', TaxReturnData['personData']['data
       d.stadt &&
       d.email
     )
+
+    if (!baseOk) return false
+
+    if (d.zivilstand === 'verheiratet') {
+      return !!(d.partner2Vorname && d.partner2Nachname && d.partner2Geburtsdatum)
+    }
+
+    return true
   },
   form: {
     fields: [
@@ -1470,11 +2245,41 @@ const personalienScreen: ScreenT<'personData', TaxReturnData['personData']['data
       },
       {
         label: 'Zivilstand',
+        type: FormFieldType.SelectInput,
+        items: [
+          { label: 'Ledig', value: 'ledig' },
+          { label: 'Verheiratet', value: 'verheiratet' },
+          { label: 'Geschieden', value: 'geschieden' },
+          { label: 'Verwitwet', value: 'verwitwet' },
+        ],
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('zivilstand'),
+      },
+      {
+        label: 'Partner: Vorname',
         type: FormFieldType.TextInput,
         inputProps: {
-          placeholder: 'Zivilstand',
+          placeholder: 'Partner Vorname',
         },
-        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('zivilstand'),
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('partner2Vorname'),
+        isVisible: (d) => d.zivilstand === 'verheiratet',
+      },
+      {
+        label: 'Partner: Nachname',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'Partner Nachname',
+        },
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('partner2Nachname'),
+        isVisible: (d) => d.zivilstand === 'verheiratet',
+      },
+      {
+        label: 'Partner: Geburtsdatum',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'Partner Geburtsdatum',
+        },
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('partner2Geburtsdatum'),
+        isVisible: (d) => d.zivilstand === 'verheiratet',
       },
       {
         label: 'Konfession',
@@ -1504,6 +2309,19 @@ const personalienScreen: ScreenT<'personData', TaxReturnData['personData']['data
         lens: Lens.fromProp<TaxReturnData['personData']['data']>()('konfession'),
       },
       {
+        label: 'Partner: Konfession',
+        type: FormFieldType.SelectInput,
+        items: [
+          { label: 'Reformiert', value: 'reformiert' },
+          { label: 'Römisch-katholisch', value: 'roemischKatholisch' },
+          { label: 'Christ-katholisch', value: 'christKatholisch' },
+          { label: 'Andere', value: 'andere' },
+          { label: 'Keine', value: 'keine' },
+        ],
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('partner2Konfession'),
+        isVisible: (d) => d.zivilstand === 'verheiratet',
+      },
+      {
         label: 'Gemeinde',
         type: FormFieldType.NumberSelectInput,
         inputProps: {
@@ -1520,6 +2338,15 @@ const personalienScreen: ScreenT<'personData', TaxReturnData['personData']['data
           placeholder: 'Beruf',
         },
         lens: Lens.fromProp<TaxReturnData['personData']['data']>()('beruf'),
+      },
+      {
+        label: 'Partner: Beruf',
+        type: FormFieldType.TextInput,
+        inputProps: {
+          placeholder: 'Partner Beruf',
+        },
+        lens: Lens.fromProp<TaxReturnData['personData']['data']>()('partner2Beruf'),
+        isVisible: (d) => d.zivilstand === 'verheiratet',
       },
       {
         label: 'Adresse',
@@ -1786,10 +2613,22 @@ export const SCREENS: Array<ScreenT<any, any>> = [
   kinderAusserhalbDetailScreen,
   hatKinderScreen,
   sozialUndVersicherungseinnahmenScreen,
+  einkuenfteSozialversicherungOverview,
+  einkuenfteSozialversicherungDetail,
   erwerbsausfallentschaedigungScreen,
+  erwerbsausfallentschaedigungOverview,
+  erwerbsausfallentschaedigungDetail,
   lebensOderRentenversicherung,
+  lebensOderRentenversicherungOverview,
+  lebensOderRentenversicherungDetail,
   geschaeftsOderKorporationsanteileScreen,
+  geschaeftsOderKorporationsanteileOverview,
+  geschaeftsOderKorporationsanteileDetail,
   verschuldetScreen,
+  verschuldetOverview,
+  verschuldetDetail,
+  unterhaltsbeitraegeYesNoScreen,
+  unterhaltsbeitraegeEhegattenScreen,
 
   //Einkuenfte
   einkuenfteOverviewScreen,
@@ -1843,8 +2682,13 @@ export const SCREENS: Array<ScreenT<any, any>> = [
 
   bargeldYesNoScreen,
   bargeldAmountScreen,
+  schuldzinsenYesNoScreen,
+  schuldzinsenAmountScreen,
   edelmetalleYesNoScreen,
   edelmetalleAmount,
+  liegenschaftenYesNoScreen,
+  liegenschaftenOverview,
+  liegenschaftenDetail,
   bankkontoUpload,
   bankkontoDetail,
   bankkontoOverview,

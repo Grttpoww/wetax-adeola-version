@@ -18,6 +18,13 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
       beruf: undefined,
       email: undefined,
       gemeindeBfsNumber: undefined,
+      ahvNummer: undefined,
+      partner2Vorname: undefined,
+      partner2Nachname: undefined,
+      partner2Geburtsdatum: undefined,
+      partner2AhvNummer: undefined,
+      partner2Beruf: undefined,
+      partner2Konfession: undefined,
     },
   },
   rueckzahlungBank: {
@@ -57,27 +64,34 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
   einkuenfteSozialversicherung: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: [],
   },
   erwerbsausfallentschaedigung: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: [],
   },
   lebensOderRentenversicherung: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: [],
   },
   geschaeftsOderKorporationsanteile: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: [],
   },
   verschuldet: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: [],
+  },
+  schuldzinsen: {
+    start: undefined,
+    finished: undefined,
+    data: {
+      betrag: undefined,
+    },
   },
   geldVerdient: {
     start: undefined,
@@ -89,12 +103,15 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     finished: undefined,
     data: {
       kosten: undefined,
+      partner2Kosten: undefined,
     },
   },
   veloArbeit: {
     start: undefined,
     finished: undefined,
-    data: {},
+    data: {
+      partner2VeloArbeit: undefined,
+    },
   },
   autoMotorradArbeit: {
     start: undefined,
@@ -105,6 +122,11 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
       staendigeBenutzungArbeitszeit: undefined,
       keinOevWeilKrankOderGebrechlich: undefined,
       geleastesFahrzeug: undefined,
+      partner2FehlenVonOev: undefined,
+      partner2ZeitersparnisUeber1h: undefined,
+      partner2StaendigeBenutzungArbeitszeit: undefined,
+      partner2KeinOevWeilKrankOderGebrechlich: undefined,
+      partner2GeleastesFahrzeug: undefined,
     },
   },
   autoMotorradArbeitWege: {
@@ -115,7 +137,7 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
   verpflegungAufArbeit: {
     start: undefined,
     finished: undefined,
-    data: { anzahlTage: undefined },
+    data: { anzahlTage: undefined, partner2AnzahlTage: undefined },
   },
   essenVerbilligungenVomArbeitgeber: {
     start: undefined,
@@ -125,7 +147,12 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
   schichtarbeit: {
     start: undefined,
     finished: undefined,
-    data: { wieVieleTageImJahr: undefined, immerSchichtarbeit: undefined },
+    data: {
+      wieVieleTageImJahr: undefined,
+      immerSchichtarbeit: undefined,
+      partner2WieVieleTageImJahr: undefined,
+      partner2ImmerSchichtarbeit: undefined,
+    },
   },
   wochenaufenthalt: {
     start: undefined,
@@ -151,6 +178,8 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     data: {
       ordentlichBetrag: undefined,
       einkaufBetrag: undefined,
+      partner2OrdentlichBetrag: undefined,
+      partner2EinkaufBetrag: undefined,
     },
   },
   ahvIVsaeule2Selber: {
@@ -158,6 +187,7 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     finished: undefined,
     data: {
       betrag: undefined,
+      partner2Betrag: undefined,
     },
   },
   saeule3a: {
@@ -165,6 +195,7 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     finished: undefined,
     data: {
       betrag: undefined,
+      partner2Betrag: undefined,
     },
   },
   versicherungspraemie: {
@@ -172,6 +203,7 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     finished: undefined,
     data: {
       betrag: undefined,
+      partner2Betrag: undefined,
     },
   },
   privateUnfall: {
@@ -179,6 +211,7 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
     finished: undefined,
     data: {
       betrag: undefined,
+      partner2Betrag: undefined,
     },
   },
   spenden: {
@@ -223,7 +256,17 @@ export const DEFAULT_TAX_RETURN_DATA: TaxReturnData = {
   liegenschaften: {
     start: undefined,
     finished: undefined,
-    data: {},
+    // Default: keine Liegenschaften erfasst
+    data: [],
+  },
+  unterhaltsbeitraege: {
+    start: undefined,
+    finished: undefined,
+    data: {
+      anEhegatten: undefined,
+      fuerKinder: [],
+      rentenleistungen: [],
+    },
   },
 }
 

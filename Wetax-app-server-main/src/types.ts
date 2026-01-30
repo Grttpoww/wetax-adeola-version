@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb'
 import { UserRole } from './enums'
 
+export type Zivilstand = 'ledig' | 'verheiratet' | 'geschieden' | 'verwitwet'
+
 export type User = {
   _id: ObjectId
   created: Date
@@ -42,11 +44,20 @@ export type TaxReturnData = {
       stadt: string | undefined // 'zurich'
       land: string | undefined // 'schweiz'
       taxMunicipality?: string | undefined // BFS number as string (used by eCH-0119 export)
-      zivilstand: string | undefined
+      zivilstand: Zivilstand | undefined
       konfession: string | undefined
       beruf: string | undefined
       email: string | undefined
       gemeindeBfsNumber: number | undefined // BFS number of municipality
+
+      // Partner-/Ehepartner-Logik (optional, additive)
+      ahvNummer?: string | undefined
+      partner2Vorname?: string | undefined
+      partner2Nachname?: string | undefined
+      partner2Geburtsdatum?: string | undefined
+      partner2AhvNummer?: string | undefined
+      partner2Beruf?: string | undefined
+      partner2Konfession?: string | undefined
     }
   }
   rueckzahlungBank: {
@@ -103,27 +114,94 @@ export type TaxReturnData = {
   einkuenfteSozialversicherung: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: Array<{
+      // Art der Einkünfte
+      art: 'ahvIvRente' | 'pensionskasse' | 'arbeitgeberRente' | 'suva' | 'militarversicherung' | 'saeule3a' | 'leibrente' | 'sonstige' | undefined
+      // Gesamtbetrag der erhaltenen Leistung (Vorkolonne)
+      gesamtbetrag: number | undefined
+      // Steuerbarer Betrag (Hauptkolonne) - wird automatisch berechnet
+      steuerbarerBetrag: number | undefined
+      // Zusätzliche Felder für automatische Berechnung (nicht editierbar im UI)
+      // Für Pensionskassenrenten:
+      rentenbeginn?: string | undefined // Format: YYYY.MM.DD
+      eigenbeitraegeProzent?: number | undefined // Für Berechnung 80% vs 100%
+      vorsorgeverhaeltnisBereits1985?: boolean | undefined // Für Berechnung 80% vs 100%
+      // Für SUVA:
+      unfalldatum?: string | undefined // Format: YYYY.MM.DD - für Berechnung 60%/80%/100%
+      praemienVomVersicherten?: number | undefined // Prozent der Prämien vom Versicherten bezahlt
+      // Für Leibrenten: Berechnungssatz (wird jährlich von ESTV publiziert)
+      leibrenteBerechnungssatz?: number | undefined
+    }>
   }
   erwerbsausfallentschaedigung: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: Array<{
+      // Art der Entschädigung
+      art: 'arbeitslosigkeit' | 'krankheit' | 'unfall' | 'militar' | 'mutterschaft' | 'sonstige' | undefined
+      // Betrag der Entschädigung
+      betrag: number | undefined
+      // Zeitraum (von-bis)
+      von: string | undefined // Format: YYYY.MM.DD
+      bis: string | undefined // Format: YYYY.MM.DD
+    }>
   }
   lebensOderRentenversicherung: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: Array<{
+      // Art der Versicherung
+      art: 'lebensversicherung' | 'rentenversicherung' | 'leibrente' | undefined
+      // Gesamtbetrag der erhaltenen Leistung (Vorkolonne)
+      gesamtbetrag: number | undefined
+      // Steuerbarer Betrag (Hauptkolonne) - wird automatisch berechnet
+      steuerbarerBetrag: number | undefined
+      // Bei Leibrenten: Berechnungssatz (wird jährlich von ESTV publiziert, für automatische Berechnung)
+      leibrenteBerechnungssatz?: number | undefined
+    }>
   }
   geschaeftsOderKorporationsanteile: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: Array<{
+      // Bezeichnung des Unternehmens/der Gemeinschaft
+      bezeichnung: string | undefined
+      // Beteiligungsquote in Prozent (z.B. 15 für 15%)
+      beteiligungsquote: number | undefined
+      // Ertrag aus Geschäfts-/Korporationsanteilen
+      ertrag: number | undefined
+      // Ist qualifizierte Beteiligung? (mindestens 10% des Grund- oder Stammkapitals)
+      istQualifizierteBeteiligung: boolean | undefined
+      // Bei qualifizierter Beteiligung: Bruttoertrag (für Teilbesteuerung)
+      bruttoertrag?: number | undefined
+      // Steuerbarer Anteil Staat (50% bei qualifizierter Beteiligung)
+      steuerbarerAnteilStaat?: number | undefined
+      // Steuerbarer Anteil Bund (70% bei qualifizierter Beteiligung)
+      steuerbarerAnteilBund?: number | undefined
+    }>
   }
   verschuldet: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: Array<{
+      // Gläubiger mit genauer Adresse (für Schuldenverzeichnis)
+      glauebiger: string | undefined
+      glauebigerAdresse: string | undefined
+      // Zinssatz in Prozent (z.B. 2.5 für 2.5%)
+      zinssatz: number | undefined
+      // Schuldhöhe per 31.12. (für Vermögenssteuer)
+      schuldhoehe: number | undefined
+      // Zinsen im Steuerjahr (für Schuldzinsenabzug, bereits in schuldzinsen erfasst)
+      zinsenImJahr: number | undefined
+    }>
+  }
+  schuldzinsen: {
+    start: boolean | undefined
+    finished: boolean | undefined
+    data: {
+      // Summe aller im Steuerjahr bezahlten Schuldzinsen auf Privatvermögen (exkl. Baurechtszinsen)
+      betrag: number | undefined
+    }
   }
   geldVerdient: {
     start: boolean | undefined
@@ -137,6 +215,7 @@ export type TaxReturnData = {
       nettolohn: number | undefined
       uploadedLohnausweis: boolean | undefined
       anzahlarbeitstage: number | undefined
+      person?: 1 | 2 // default: 1 (backward compatible)
     }>
   }
   oevArbeit: {
@@ -144,12 +223,15 @@ export type TaxReturnData = {
     finished: boolean | undefined
     data: {
       kosten: number | undefined
+      partner2Kosten?: number | undefined
     }
   }
   veloArbeit: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: {}
+    data: {
+      partner2VeloArbeit?: boolean | undefined
+    }
   }
   autoMotorradArbeit: {
     start: boolean | undefined
@@ -160,6 +242,12 @@ export type TaxReturnData = {
       staendigeBenutzungArbeitszeit: boolean | undefined
       keinOevWeilKrankOderGebrechlich: boolean | undefined
       geleastesFahrzeug: boolean | undefined
+
+      partner2FehlenVonOev?: boolean | undefined
+      partner2ZeitersparnisUeber1h?: boolean | undefined
+      partner2StaendigeBenutzungArbeitszeit?: boolean | undefined
+      partner2KeinOevWeilKrankOderGebrechlich?: boolean | undefined
+      partner2GeleastesFahrzeug?: boolean | undefined
     }
   }
   autoMotorradArbeitWege: {
@@ -177,7 +265,7 @@ export type TaxReturnData = {
   verpflegungAufArbeit: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: { anzahlTage: number | undefined }
+    data: { anzahlTage: number | undefined; partner2AnzahlTage?: number | undefined }
   }
   essenVerbilligungenVomArbeitgeber: {
     start: boolean | undefined
@@ -187,7 +275,12 @@ export type TaxReturnData = {
   schichtarbeit: {
     start: boolean | undefined
     finished: boolean | undefined
-    data: { wieVieleTageImJahr: number | undefined; immerSchichtarbeit: boolean | undefined }
+    data: {
+      wieVieleTageImJahr: number | undefined
+      immerSchichtarbeit: boolean | undefined
+      partner2WieVieleTageImJahr?: number | undefined
+      partner2ImmerSchichtarbeit?: boolean | undefined
+    }
   }
   wochenaufenthalt: {
     start: boolean | undefined
@@ -204,6 +297,7 @@ export type TaxReturnData = {
     data: Array<{
       bezeichung: string | undefined
       betrag: number | undefined
+      person?: 1 | 2 // default: 1 (backward compatible)
     }>
   }
 
@@ -219,6 +313,8 @@ export type TaxReturnData = {
     data: {
       ordentlichBetrag: number | undefined
       einkaufBetrag: number | undefined
+      partner2OrdentlichBetrag?: number | undefined
+      partner2EinkaufBetrag?: number | undefined
     }
   }
   ahvIVsaeule2Selber: {
@@ -226,6 +322,7 @@ export type TaxReturnData = {
     finished: boolean | undefined
     data: {
       betrag: number | undefined
+      partner2Betrag?: number | undefined
     }
   }
   saeule3a: {
@@ -233,6 +330,7 @@ export type TaxReturnData = {
     finished: boolean | undefined
     data: {
       betrag: number | undefined
+      partner2Betrag?: number | undefined
     }
   }
 
@@ -241,6 +339,7 @@ export type TaxReturnData = {
     finished: boolean | undefined
     data: {
       betrag: number | undefined
+      partner2Betrag?: number | undefined
     }
   }
   privateUnfall: {
@@ -248,6 +347,7 @@ export type TaxReturnData = {
     finished: boolean | undefined
     data: {
       betrag: number | undefined
+      partner2Betrag?: number | undefined
     }
   }
   spenden: {
@@ -300,6 +400,12 @@ export type TaxReturnData = {
       steuerwertEndeJahr: number | undefined
       stueckzahl: number | undefined
       steuerwertProStueck: number | undefined
+      // Dividendenertrag (als Einkommen, Ziffer 4)
+      dividendenertrag: number | undefined
+      // Beteiligungsquote in Prozent (für qualifizierte Beteiligungen, mindestens 10%)
+      beteiligungsquote: number | undefined
+      // Ist qualifizierte Beteiligung? (mindestens 10% des Grund- oder Stammkapitals)
+      istQualifizierteBeteiligung: boolean | undefined
     }>
   }
 
@@ -327,8 +433,56 @@ export type TaxReturnData = {
   liegenschaften: {
     start: boolean | undefined
     finished: boolean | undefined
-
-    data: {}
+    // Array, da mehrere Liegenschaften möglich sind (In- und Ausland, verschiedene Kantone)
+    data: Array<{
+      // Freitext-Bezeichnung zur Wiedererkennung in der UI / PDF
+      bezeichnung: string | undefined
+      // Ort / Gemeinde (frei, BFS-Logik kann später ergänzt werden)
+      ort: string | undefined
+      // Kanton (z.B. 'ZH', 'BS') für spätere interkantonale Ausscheidung
+      kanton: string | undefined
+      // Jahresbruttoertrag der Liegenschaft:
+      // - bei selbstgenutzten Objekten: Eigenmietwert gemäss Steuerveranlagung
+      // - bei vermieteten Objekten: Netto-Mietzinseinnahmen (exkl. Nebenkosten)
+      eigenmietwertOderMietertrag: number | undefined
+      // Art des Unterhaltsabzugs:
+      // - 'pauschal'  → Pauschalabzug gemäss ZH-Wegleitung (standardmässig 20% des Bruttomietertrags)
+      // - 'effektiv' → Effektive Unterhalts- und Verwaltungskosten gemäss Belegen
+      unterhaltArt: 'pauschal' | 'effektiv' | undefined
+      // Effektiver Unterhaltsbetrag (nur relevant bei unterhaltArt === 'effektiv')
+      unterhaltBetrag: number | undefined
+      // Kennzeichnet vorwiegend geschäftlich genutzte Liegenschaften:
+      // Bei geschäftlicher Nutzung ist gemäss Wegleitung kein Pauschalabzug zulässig.
+      istGeschaeftlich: boolean | undefined
+      // Vermögenssteuerwert der Liegenschaft per 31.12. (gemäss kantonalem Bewertungsbescheid / ZStB 21.1)
+      vermoegenssteuerwert: number | undefined
+    }>
+  }
+  unterhaltsbeitraege: {
+    start: boolean | undefined
+    finished: boolean | undefined
+    data: {
+      // Unterhaltsbeiträge an geschiedenen/getrennten Ehegatten (voll abzugsfähig)
+      anEhegatten: number | undefined
+      // Unterhaltsbeiträge für minderjährige Kinder (bis 18. Altersjahr)
+      // Array mit Betrag pro Kind
+      fuerKinder: Array<{
+        kindName: string | undefined
+        geburtsdatum: string | undefined // Format: YYYY.MM.DD
+        betrag: number | undefined
+        // Monat, in dem das Kind 18 wird (für Berechnung)
+        monat18Jahre: string | undefined // Format: YYYY.MM
+      }>
+      // Rentenleistungen (Ertragsanteil von Leibrenten/Verpfründungen)
+      rentenleistungen: Array<{
+        bezeichnung: string | undefined
+        gesamtbetrag: number | undefined
+        // Berechnungssatz (wird jährlich von ESTV publiziert)
+        berechnungssatz: number | undefined
+        // Abzugsfähiger Ertragsanteil (berechnet: gesamtbetrag * berechnungssatz / 100)
+        abzugsfaehigerErtragsanteil: number | undefined
+      }>
+    }
   }
 }
 
@@ -377,6 +531,8 @@ export type LohnausweisScanT = {
     von: string //'2025.01.01'
     bis: string //'2025.12.31'
     nettolohn: number //203000
+    arbeitgeber?: string //'Firma AG'
+    arbeitsort?: string //'Zurich'
     spesenVerguetungen: {
       effektiveSpesen: {
         spesenReise: number //300
@@ -441,10 +597,39 @@ export type ComputedTaxReturnT = {
   einkommenssteuerBund: number
   wertschriften: wertschriftenEintrag[]
   totalSteuerwertVermoegen: number
+  // Bruttoertrag aus Wertschriften mit Verrechnungssteuer (z.B. Zinsen, Dividenden)
   bruttoertragA: number
   bruttoerttragB: number
   totalBruttoertragAB: number
   verrechnungssteueranspruch: number
+
+  // Immobilien / Liegenschaften
+  // Nettoertrag aus Liegenschaften (Eigenmietwert + Mietzinsertrag - zulässige Unterhaltskosten)
+  nettoertragLiegenschaften: number
+  // Summe der Vermögenssteuerwerte aller Liegenschaften
+  totalSteuerwertLiegenschaften: number
+
+  // Wertschriftenertrag (Einkommen Ziffer 4)
+  // Zinsen von Bankkonten/Guthaben
+  wertschriftenertragZinsen: number
+  // Dividenden von Aktien
+  wertschriftenertragDividenden: number
+  // Qualifizierte Beteiligungen (Teilbesteuerung)
+  wertschriftenertragQualifizierteBeteiligungen: number
+  // Freistellungsanteil qualifizierte Beteiligungen (Abzug Ziffer 16.5)
+  freistellungsanteilQualifizierteBeteiligungenStaat: number
+  freistellungsanteilQualifizierteBeteiligungenBund: number
+
+  // Sozialversicherungen/Leibrenten (Einkommen Ziffer 3)
+  einkuenfteSozialversicherungTotal: number
+
+  // Unterhaltsbeiträge und Rentenleistungen (Abzug Ziffer 13)
+  abzugUnterhaltsbeitraegeEhegatten: number
+  abzugUnterhaltsbeitraegeKinder: number
+  abzugRentenleistungen: number
+
+  // Schulden (Vermögen Ziffer 34)
+  totalSchulden: number
 
   bargeldGoldEdelmetalle: number
   motorfahrzeugeAbzugTotal: number

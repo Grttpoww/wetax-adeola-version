@@ -62,6 +62,7 @@ export const FormObjTemplate = <T extends TaxReturnDataKey>(props: { screen: Scr
       <Form<TaxReturnData[T]['data']>
         formFields={enhancedFields}
         data={formState}
+        rootData={taxReturn.data}
         onChange={setFormState}
         setError={() => { }}
       />

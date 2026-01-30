@@ -134,6 +134,7 @@ const _FormArrayTemplate = <T extends TaxReturnDataKey, U extends {}>(props: {
       <Form<U>
         formFields={formFieldsWithDynamicPlaceholders}
         data={formState}
+        rootData={taxReturn.data}
         onChange={setFormState}
         setError={() => { }}
       />

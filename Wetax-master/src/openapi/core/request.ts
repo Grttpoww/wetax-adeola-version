@@ -201,27 +201,7 @@ export const sendRequest = async (
     headers: Headers,
     onCancel: OnCancel
 ): Promise<Response> => {
-    // VALIDATION: Check BASE URL before making request
-    if (!config.BASE || config.BASE.trim() === '') {
-        const error = new Error(`OpenAPI.BASE is empty! Cannot make request to ${options.url}`);
-        console.error('[REQUEST ERROR]', error.message);
-        throw error;
-    }
-
-    // VALIDATION: Check URL is valid (not relative without BASE)
-    if (!url || url.startsWith('/') && !config.BASE) {
-        const error = new Error(`Invalid URL: ${url}. BASE: ${config.BASE}`);
-        console.error('[REQUEST ERROR]', error.message);
-        throw error;
-    }
-
     const controller = new AbortController();
-    
-    // TIMEOUT: 30 seconds for all requests
-    const timeoutId = setTimeout(() => {
-        console.warn('[REQUEST TIMEOUT]', `Request to ${url} timed out after 30s`);
-        controller.abort();
-    }, 30000);
 
     const request: RequestInit = {
         headers,
@@ -234,25 +214,9 @@ export const sendRequest = async (
         request.credentials = config.CREDENTIALS;
     }
 
-    onCancel(() => {
-        clearTimeout(timeoutId);
-        controller.abort();
-    });
+    onCancel(() => controller.abort());
 
-    try {
-        const response = await fetch(url, request);
-        clearTimeout(timeoutId);
-        return response;
-    } catch (error: any) {
-        clearTimeout(timeoutId);
-        if (error.name === 'AbortError') {
-            const timeoutError = new Error(`Request timeout after 30s: ${url}`);
-            console.error('[REQUEST TIMEOUT]', timeoutError.message);
-            throw timeoutError;
-        }
-        console.error('[REQUEST ERROR]', error.message || error);
-        throw error;
-    }
+    return await fetch(url, request);
 };
 
 export const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {

@@ -94,6 +94,32 @@ export function calculateVermoegenssteuer(amount: number): number {
   }
 }
 
+/**
+ * Calculate tax for married couples using splitting procedure
+ * @param income - Combined taxable income (after all deductions)
+ * @param steuertyp - 'bund' or 'staat'
+ * @param religion - Religion for state tax calculation (only used if steuertyp === 'staat')
+ * @returns Tax amount (base cantonal tax, without municipal multiplier)
+ */
+export function calculateTaxMarried(
+  income: number,
+  steuertyp: 'bund' | 'staat',
+  religion: string = 'andere',
+): number {
+  // Splitting-Verfahren: Halbiere Einkommen, berechne Steuer, verdopple
+  const halfIncome = income / 2
+  
+  if (steuertyp === 'bund') {
+    const taxOnHalf = einkommenssteuerBundCalc(halfIncome)
+    return taxOnHalf * 2
+  } else {
+    // Für Staat: Verwende calculateEinkommenssteuerStaat für halbiertes Einkommen
+    // (Die Brackets sind bereits für Einzelpersonen, Splitting wird durch Halbierung + Verdopplung erreicht)
+    const taxOnHalf = calculateEinkommenssteuerStaat(halfIncome, religion)
+    return taxOnHalf * 2
+  }
+}
+
 import { MunicipalityTaxRatesCache } from './types'
 
 /**

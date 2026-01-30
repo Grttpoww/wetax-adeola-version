@@ -1,0 +1,19 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "code": "SCHEMA_MISSING_SOURCE",
+      "message": "source ist erforderlich",
+      "severity": "error",
+      "field": "header.source"
+    },
+    {
+      "code": "MUNICIPALITY_ID_INVALID_RANGE",
+      "message": "municipalityId 261 liegt nicht im gültigen Bereich für ZH (10000-19999)",
+      "severity": "warning",
+      "field": "personDataPartner1.taxMunicipality.municipalityId"
+    }
+  ],
+  "errorCount": 1,
+  "warningCount": 1
+}

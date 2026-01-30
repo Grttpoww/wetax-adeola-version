@@ -82,6 +82,11 @@ export type LinkSwitchInputField<FormData> = FormInput<
 
 type CommonFieldProps<FormData> = {
   isVisible?: (formData: FormData) => boolean
+  /**
+   * Optional visibility predicate that can also inspect the root (screen-level) data.
+   * This is used for conditional fields that depend on other sections (e.g. marital status).
+   */
+  isVisibleWithRoot?: (formData: FormData, rootData: unknown) => boolean
   hide?: boolean
   isDisabled?: boolean
   validate?: (formData: FormData) => boolean
@@ -169,6 +174,7 @@ type Props<FormData> = {
   children?: React.ReactNode
   style?: Partial<Theme['form']>
   data: FormData
+  rootData?: unknown
   setError: (v: string) => void
   onSubmit?: () => void
   onInvalidSubmit?: () => void
@@ -195,6 +201,11 @@ export const Form = <FormData,>(props: Props<FormData>) => {
     let invalidString = ''
 
     const isFieldInvalid = (f: SingleFormField<FormData>): boolean => {
+      // Skip hidden / invisible fields from validation
+      if (f.hide) return false
+      if (f.isVisible && !f.isVisible(props.data)) return false
+      if (f.isVisibleWithRoot && !f.isVisibleWithRoot(props.data, props.rootData)) return false
+
       if ('validate' in f && f.validate !== undefined) {
         const res = f.validate(props.data)
         invalidString = `Invalid value for: ${'label' in f ? f.label : ''}`
@@ -328,7 +339,9 @@ export const Form = <FormData,>(props: Props<FormData>) => {
   }
 
   const renderFormFieldItem = (field: SingleFormField<FormData>, key: number) =>
-    field.hide ? undefined : (
+    field.hide ||
+    (field.isVisible && !field.isVisible(props.data)) ||
+    (field.isVisibleWithRoot && !field.isVisibleWithRoot(props.data, props.rootData)) ? undefined : (
       <FormFieldWrapper key={key} style={squashStyles([...getStyle('inputWrapper'), field.style || {}])}>
         {renderFormFieldInput(field)}
       </FormFieldWrapper>

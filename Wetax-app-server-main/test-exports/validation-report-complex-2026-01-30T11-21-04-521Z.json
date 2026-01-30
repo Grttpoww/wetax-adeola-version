@@ -1,0 +1,19 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "code": "TOTALS_NET_INCOME_CANTONAL_INCONSISTENT",
+      "message": "Net Income Kantonal: erwartet 143344, tatsächlich 142144",
+      "severity": "error",
+      "field": "revenueCalculation.netIncome.cantonalTax"
+    },
+    {
+      "code": "TOTALS_ADJUSTED_NET_INCOME_CANTONAL_INCONSISTENT",
+      "message": "Adjusted Net Income Kantonal: erwartet 141644, tatsächlich 131644",
+      "severity": "error",
+      "field": "revenueCalculation.adjustedNetIncome.cantonalTax"
+    }
+  ],
+  "errorCount": 2,
+  "warningCount": 0
+}

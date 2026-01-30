@@ -1,0 +1,13 @@
+{
+  "isValid": false,
+  "results": [
+    {
+      "code": "TOTALS_DEDUCTION_CANTONAL_INCONSISTENT",
+      "message": "Deduction Total Kantonal: erwartet 14200, tatsächlich 24200",
+      "severity": "error",
+      "field": "deduction.totalAmountDeduction.cantonalTax"
+    }
+  ],
+  "errorCount": 1,
+  "warningCount": 0
+}

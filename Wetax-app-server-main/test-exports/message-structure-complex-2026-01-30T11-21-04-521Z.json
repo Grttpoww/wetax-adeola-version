@@ -1,0 +1,127 @@
+{
+  "@minorVersion": 0,
+  "header": {
+    "taxPeriod": "2024",
+    "source": 0,
+    "canton": "ZH",
+    "transactionDate": "2026-01-30T11:21:04.504Z",
+    "sourceDescription": "WETAX Mobile App",
+    "periodFrom": "2024-01-01",
+    "periodTo": "2024-12-31",
+    "transactionNumber": "WETAX-2024-697c9420cbfdb6120a54bfcd",
+    "cantonExtension": {
+      "canton": "ZH"
+    }
+  },
+  "content": {
+    "mainForm": {
+      "personDataPartner1": {
+        "partnerPersonIdentification": {
+          "officialName": "Mustermann",
+          "firstName": "Max",
+          "vn": "756.1985.1234.56",
+          "dateOfBirth": "1989-03-15"
+        },
+        "addressInformation": {
+          "street": "Bahnhofstrasse",
+          "houseNumber": "15",
+          "town": "Zürich",
+          "swissZipCode": "8001",
+          "country": "CH"
+        },
+        "maritalStatusTax": 1,
+        "religion": 2,
+        "job": "Software-Architekt",
+        "employer": "Tech Solutions AG",
+        "placeOfWork": "Zürich",
+        "phoneNumberPrivate": {
+          "phoneNumber": "+41 79 555 12 34"
+        },
+        "taxMunicipality": {
+          "municipalityId": 261,
+          "cantonAbbreviation": "ZH"
+        }
+      },
+      "revenue": {
+        "employedMainRevenue": {
+          "partner1Amount": 156900
+        },
+        "securitiesRevenue": {
+          "cantonalTax": 1200
+        },
+        "totalAmountRevenue": {
+          "cantonalTax": 158100,
+          "federalTax": 156900
+        }
+      },
+      "deduction": {
+        "jobExpensesPartner1": {
+          "cantonalTax": 4800,
+          "federalTax": 4800
+        },
+        "provision3aPartner1Deduction": {
+          "cantonalTax": 7056,
+          "federalTax": 7056
+        },
+        "insuranceAndInterest": {
+          "cantonalTax": 2900,
+          "federalTax": 1800
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 14756,
+          "federalTax": 13656
+        },
+        "provision3aPartner1Effective": 7056
+      },
+      "revenueCalculation": {
+        "totalAmountRevenue": {
+          "cantonalTax": 158100,
+          "federalTax": 156900
+        },
+        "totalAmountDeduction": {
+          "cantonalTax": 14756,
+          "federalTax": 13656
+        },
+        "netIncome": {
+          "cantonalTax": 142144,
+          "federalTax": 143244
+        },
+        "deductionCharity": {
+          "cantonalTax": 500,
+          "federalTax": 500
+        },
+        "adjustedNetIncome": {
+          "cantonalTax": 131644,
+          "federalTax": 132744
+        },
+        "totalAmountFiscalRevenue": {
+          "cantonalTax": 131644,
+          "federalTax": 132744
+        }
+      },
+      "asset": {
+        "movablePropertyCashValue": {
+          "fiscalValue": 5000
+        },
+        "movablePropertySecuritiesAndAssets": {
+          "fiscalValue": 85000
+        },
+        "movablePropertyHeritageEtc": {
+          "fiscalValue": 10000
+        },
+        "movablePropertyVehicle": {
+          "fiscalValue": 15000
+        },
+        "totalAmountAssets": {
+          "fiscalValue": 235000
+        },
+        "totalAmountFiscalAssets": {
+          "fiscalValue": 235000
+        },
+        "moveablePropertyVehicleDescription": "Tesla Model 3",
+        "moveablePropertyVehiclePurchasePrice": 25000,
+        "moveablePropertyVehicleYear": "2022"
+      }
+    }
+  }
+}
