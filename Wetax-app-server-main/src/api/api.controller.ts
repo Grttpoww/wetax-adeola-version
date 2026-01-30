@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Path, Post, Request, Res, Route, Security, Tags } from 'tsoa'
+import { Body, Controller, Get, Path, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa'
 import {
   generatePdf,
   archiveTaxReturn,
@@ -180,7 +180,7 @@ export class ApiController extends Controller {
   public async exportECH0119(
     @Request() request: express.Request,
     @Path() taxReturnId: string,
-    @Res() res: express.Response,
+    @Res() res: TsoaResponse<200, string>,
   ): Promise<void> {
     const injected = request as unknown as Injected
     const xml = await exportECH0119XML(taxReturnId, injected)
@@ -192,10 +192,9 @@ export class ApiController extends Controller {
     
     // Set headers for file download
     const filename = `steuererklärung-${year}-${userId}.xml`
-    res.setHeader('Content-Type', 'application/xml')
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
-    
-    // Send XML as response
-    res.send(xml)
+    const response = res(200, xml, {
+      'Content-Type': 'application/xml',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+    })
   }
 }

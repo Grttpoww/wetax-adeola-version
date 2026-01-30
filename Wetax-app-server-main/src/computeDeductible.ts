@@ -1,4 +1,5 @@
 import { TaxReturnData } from './types'
+import { computeTaxAmount } from './computeTaxAmount'
 
 const rappenToChf = (rappen: number) => rappen / 100
 
@@ -124,11 +125,19 @@ export const computeDeductible = (taxReturn: TaxReturnData): DeductibleReturnTyp
       case 'saeule3a': {
         const data = value.data as TaxReturnData['saeule3a']['data']
 
-        const maxDeductibleAmount = 7056
+        // Updated limit: 7258 CHF (not 7056)
+        const maxDeductibleAmount = 7258
 
-        const deductibleAmount = Math.min(data.betrag ?? 0, maxDeductibleAmount)
-
-        deductibles['saeule3a'] = deductibleAmount
+        // For married couples: separate limits per person
+        const zivilstand = taxReturn.personData?.data?.zivilstand
+        if (zivilstand === 'verheiratet') {
+          const person1Betrag = Math.min(data.betrag ?? 0, maxDeductibleAmount)
+          const person2Betrag = Math.min(data.partner2Betrag ?? 0, maxDeductibleAmount)
+          deductibles['saeule3a'] = person1Betrag + person2Betrag
+        } else {
+          const deductibleAmount = Math.min(data.betrag ?? 0, maxDeductibleAmount)
+          deductibles['saeule3a'] = deductibleAmount
+        }
 
         break
       }
@@ -159,11 +168,16 @@ export const computeDeductible = (taxReturn: TaxReturnData): DeductibleReturnTyp
         // The spende has to be a minimum of 100 CHF
         const minSingleAmount = 100
         // The spende has to be a maximum of 20% of the total income
-        // TODO: Implement the total income calculation
+        const incomeResult = computeTaxAmount(taxReturn)
+        const totalIncome = Object.values(incomeResult).reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0)
+        const maxDeductibleAmount = totalIncome * 0.2
 
-        deductibles['spenden'] = data.reduce(
-          (acc, { betrag = 0 }) => (acc + betrag >= minSingleAmount ? betrag : 0),
-          0,
+        deductibles['spenden'] = Math.min(
+          data.reduce(
+            (acc, { betrag = 0 }) => (betrag >= minSingleAmount ? acc + betrag : acc),
+            0,
+          ),
+          maxDeductibleAmount
         )
       }
     }
